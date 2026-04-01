@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pickleball">
+<meta name="theme-color" content="#0a0f0d">
+<title>Pickleball Social</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#2d6a4f;--gl:#52b788;--acc:#f4a261;--acc2:#e76f51;
+  --bg:#0a0f0d;--bg2:#111a15;--bg3:#162118;--card:#1a2b20;
+  --bdr:#2a3f30;--txt:#e8f5e9;--mut:#7aad8a;
+  --A:#f4a261;--B:#74b3ce;--C:#a8dadc;
+  --win:#52b788;--lose:#e76f51;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(82,183,136,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(82,183,136,.04) 1px,transparent 1px);
+  background-size:40px 40px;}
+.wrap{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:0 16px 60px;}
+
+/* INSTALL BANNER */
+#installBanner{display:none;background:linear-gradient(135deg,#1a4a35,#0f2e20);border-bottom:1px solid #2d6a4f;padding:11px 16px;flex-wrap:wrap;gap:10px;align-items:center;}
+#installBanner .ib-text{flex:1;min-width:180px;}
+#installBanner .ib-title{font-size:13px;font-weight:700;color:#e8f5e9;}
+#installBanner .ib-sub{font-size:11px;color:#7aad8a;margin-top:2px;}
+#installBanner .ib-btns{display:flex;gap:8px;flex-shrink:0;}
+
+/* HEADER */
+header{padding:24px 0 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bdr);margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.logo h1{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:var(--gl);line-height:1;}
+.logo .sub{font-size:10px;color:var(--mut);letter-spacing:3px;text-transform:uppercase;margin-top:2px;}
+.hdr-stats{display:flex;gap:8px;flex-wrap:wrap;}
+.hstat{background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:8px 14px;text-align:center;min-width:60px;}
+.hstat .v{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--acc);line-height:1;}
+.hstat .l{font-size:10px;color:var(--mut);letter-spacing:1px;text-transform:uppercase;}
+
+/* TABS */
+.tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;}
+.tab{padding:7px 16px;border-radius:8px;border:1px solid var(--bdr);background:transparent;color:var(--mut);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.tab.active{background:var(--gl);color:#000;border-color:var(--gl);}
+.tab:hover:not(.active){border-color:var(--gl);color:var(--gl);}
+.page{display:none;}.page.active{display:block;}
+
+/* PANEL */
+.panel{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:18px;margin-bottom:18px;}
+.sec{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;color:var(--gl);margin-bottom:13px;display:flex;align-items:center;gap:10px;}
+.sec::after{content:'';flex:1;height:1px;background:var(--bdr);}
+
+/* BUTTONS */
+.btn{padding:9px 18px;border-radius:8px;border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-green{background:var(--gl);color:#000;}.btn-green:hover{background:#6fcf97;transform:translateY(-1px);}
+.btn-ghost{background:transparent;color:var(--txt);border:1px solid var(--bdr);}.btn-ghost:hover{border-color:var(--gl);color:var(--gl);}
+.btn-acc{background:var(--acc);color:#000;}.btn-acc:hover{background:var(--acc2);}
+.btn-sm{padding:5px 12px;font-size:12px;border-radius:6px;}
+.btn-del{background:transparent;color:#4a5568;border:none;cursor:pointer;font-size:15px;padding:2px 5px;border-radius:4px;line-height:1;transition:all .15s;flex-shrink:0;}
+.btn-del:hover{color:var(--lose);background:rgba(231,111,81,.12);}
+
+/* PLAYERS GRID */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;margin-bottom:14px;}
+.pcard{background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:10px 11px;transition:border-color .2s;}
+.pcard[data-rank="A"]{border-color:rgba(244,162,97,.4);}
+.pcard[data-rank="B"]{border-color:rgba(116,179,206,.4);}
+.pcard[data-rank="C"]{border-color:rgba(168,218,220,.4);}
+.pcard-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.av{width:31px;height:31px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:12px;flex-shrink:0;border:2px solid;}
+.pname{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;}
+.pstat{font-size:10px;color:var(--mut);margin-bottom:5px;}
+.pelo{font-size:11px;font-weight:700;}
+.rbtns{display:flex;gap:3px;margin-top:4px;}
+.rb{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;border:1px solid transparent;cursor:pointer;background:transparent;transition:all .15s;}
+.rb.A{color:var(--A);border-color:var(--A);}.rb.A.on{background:var(--A);color:#000;}
+.rb.B{color:var(--B);border-color:var(--B);}.rb.B.on{background:var(--B);color:#000;}
+.rb.C{color:var(--C);border-color:var(--C);}.rb.C.on{background:var(--C);color:#000;}
+
+/* COURTS */
+.cgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;margin-bottom:20px;}
+.cgrid-group{display:contents;}
+.court-group-lbl{grid-column:1/-1;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--mut);padding:4px 2px 0;border-top:1px solid var(--bdr);margin-top:4px;}
+.court-group-lbl:first-child{border-top:none;margin-top:0;}
+.court{background:var(--card);border:1px solid var(--bdr);border-radius:13px;overflow:hidden;animation:fu .35s ease both;}
+.court.live{border-color:var(--green);}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.chdr{background:var(--bg3);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bdr);}
+.cname{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;}
+.cbadge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.cbA{background:rgba(244,162,97,.18);color:var(--A);border:1px solid var(--A);}
+.cbB{background:rgba(116,179,206,.18);color:var(--B);border:1px solid var(--B);}
+.cbC{background:rgba(168,218,220,.18);color:var(--C);border:1px solid var(--C);}
+.cbMIX{background:rgba(244,162,97,.12);color:var(--acc);border:1px solid var(--acc);}
+.cbody{padding:13px;}
+.mrow{display:flex;align-items:center;gap:8px;}
+.team{flex:1;display:flex;flex-direction:column;gap:5px;}
+.vs{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--acc);}
+.chip{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;padding:5px 8px;}
+.chav{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;flex-shrink:0;}
+.chname{font-size:11px;font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chelo{font-size:10px;font-weight:700;margin-left:auto;}
+.saved-bar{display:flex;align-items:center;gap:7px;margin-top:9px;padding:6px 9px;background:rgba(82,183,136,.1);border:1px solid var(--win);border-radius:7px;font-size:12px;}
+
+/* SCORE */
+.score-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:13px;}
+.score-in{width:50px;background:var(--bg);border:1px solid var(--bdr);border-radius:7px;padding:6px 8px;color:var(--txt);font-family:'Bebas Neue',sans-serif;font-size:22px;text-align:center;outline:none;}
+.score-in:focus{border-color:var(--gl);}
+
+/* LEADERBOARD */
+.lboard{display:flex;flex-direction:column;gap:7px;}
+.lrow{display:flex;align-items:center;gap:11px;background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:10px 13px;}
+.lrow:hover{transform:translateX(2px);transition:transform .15s;}
+.lrank{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--mut);min-width:24px;}
+.lrank.g{color:gold}.lrank.s{color:silver}.lrank.b{color:#cd7f32}
+.lav{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:12px;flex-shrink:0;border:2px solid;}
+.linfo{flex:1;}
+.lname{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.lsub{font-size:10px;color:var(--mut);margin-top:2px;}
+.lelo{font-family:'Bebas Neue',sans-serif;font-size:23px;min-width:54px;text-align:right;}
+.ldelta{font-size:11px;font-weight:700;text-align:right;}
+.frow{display:flex;gap:3px;}
+.fd{width:13px;height:13px;border-radius:50%;font-size:7px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#000;}
+.fdW{background:var(--win);}.fdL{background:var(--lose);}.fdD{background:var(--bdr);}
+.ebar{width:65px;}
+.ebg{background:var(--bg);border-radius:3px;height:4px;overflow:hidden;margin-top:4px;}
+.efill{height:100%;border-radius:3px;transition:width .5s;}
+
+/* HISTORY */
+.hlist{display:flex;flex-direction:column;gap:7px;}
+.hi{background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:10px 13px;}
+.hihead{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+.hirnd{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--mut);min-width:26px;}
+.hmatches{display:flex;flex-wrap:wrap;gap:6px;}
+.hm{background:var(--card);border-radius:6px;padding:5px 9px;font-size:11px;line-height:1.6;}
+.hmtype{font-weight:700;font-size:10px;}
+
+/* BENCH */
+.bench{display:flex;flex-wrap:wrap;gap:7px;}
+.bchip{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;padding:5px 10px;opacity:.6;font-size:12px;}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;align-items:center;justify-content:center;}
+.overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--bdr);border-radius:16px;padding:24px;max-width:400px;width:90%;max-height:85vh;overflow-y:auto;}
+.modal h3{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--gl);margin-bottom:15px;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:11px;color:var(--mut);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+.field input{width:100%;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:9px 12px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;}
+.field input:focus{border-color:var(--gl);}
+.mrank-row{display:flex;gap:8px;margin-bottom:14px;}
+.mrank{flex:1;padding:9px;border-radius:8px;border:1px solid var(--bdr);background:transparent;color:var(--mut);font-family:'Bebas Neue',sans-serif;font-size:18px;cursor:pointer;transition:all .2s;}
+.mrank.onA{background:var(--A);color:#000;border-color:var(--A);}
+.mrank.onB{background:var(--B);color:#000;border-color:var(--B);}
+.mrank.onC{background:var(--C);color:#000;border-color:var(--C);}
+.mbtns{display:flex;gap:9px;margin-top:14px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:#2d6a4f;color:#fff;padding:10px 17px;border-radius:8px;font-size:13px;font-weight:500;z-index:200;transform:translateY(60px);opacity:0;transition:all .3s;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* LEGEND */
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.leg{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--bdr);border-radius:6px;padding:5px 10px;font-size:12px;}
+.dot{width:8px;height:8px;border-radius:50%;}
+
+/* INLINE SCORE on court card */
+.inline-score{margin-top:10px;border-top:1px solid var(--bdr);padding-top:10px;}
+.inline-score .isrow{display:flex;align-items:center;gap:6px;justify-content:center;}
+.inline-score .islbl{font-size:10px;color:var(--mut);text-align:center;margin-bottom:3px;}
+.score-in-sm{width:46px;background:var(--bg);border:1px solid var(--bdr);border-radius:6px;padding:5px 6px;color:var(--txt);font-family:'Bebas Neue',sans-serif;font-size:22px;text-align:center;outline:none;}
+.score-in-sm:focus{border-color:var(--gl);}
+
+/* COURT MANAGEMENT MODAL */
+.mgt-modal{background:var(--bg2);border:1px solid var(--bdr);border-radius:16px;padding:18px;max-width:520px;width:96%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.mgt-modal h3{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:2px;color:var(--gl);margin-bottom:13px;}
+
+/* ── compact court cards ── */
+.court-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:12px;padding:11px 12px;margin-bottom:9px;}
+.court-card-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.court-name-inp{background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;padding:5px 9px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;width:90px;outline:none;}
+.court-name-inp:focus{border-color:var(--gl);}
+.court-slots{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.cslot{background:var(--bg);border:1.5px solid var(--bdr);border-radius:9px;padding:7px 9px;transition:border-color .2s;min-height:48px;}
+.cslot.drag-over{border-color:var(--gl);background:rgba(82,183,136,.08);}
+.cslot-lbl{font-size:9px;color:var(--mut);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.cslot-body{display:flex;align-items:center;gap:5px;min-height:24px;}
+
+/* filled slot chip */
+.slot-chip{display:inline-flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--bdr);border-radius:6px;padding:3px 7px;font-size:11px;cursor:grab;user-select:none;touch-action:none;-webkit-user-select:none;flex:1;}
+.slot-chip .dav{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:6px;font-weight:700;flex-shrink:0;}
+.slot-chip-name{flex:1;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.slot-chip-rank{font-size:9px;font-weight:700;}
+.slot-chip-del{background:transparent;border:none;color:#4a5568;cursor:pointer;font-size:13px;padding:0 2px;line-height:1;flex-shrink:0;}
+.slot-chip-del:hover{color:var(--lose);}
+
+/* empty slot — tap to pick */
+.slot-pick-btn{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;background:transparent;border:1px dashed var(--bdr);border-radius:6px;padding:5px 8px;color:var(--mut);font-size:11px;cursor:pointer;transition:all .2s;}
+.slot-pick-btn:hover,.slot-pick-btn:active{border-color:var(--gl);color:var(--gl);background:rgba(82,183,136,.06);}
+
+/* pool area */
+.pool-area{background:var(--bg3);border:1px dashed var(--bdr);border-radius:10px;padding:9px;margin-bottom:11px;}
+.pool-area.drag-over{border-color:var(--acc);background:rgba(244,162,97,.06);}
+.pool-lbl{font-size:11px;color:var(--mut);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;}
+.pool-chip{display:inline-flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--bdr);border-radius:6px;padding:3px 8px;font-size:11px;cursor:grab;user-select:none;touch-action:none;-webkit-user-select:none;}
+.pool-chip .dav{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:6px;font-weight:700;flex-shrink:0;}
+
+.add-court-row{display:flex;gap:8px;align-items:center;margin-bottom:11px;}
+.add-court-inp{flex:1;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:8px 11px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;}
+.add-court-inp:focus{border-color:var(--gl);}
+.btn-del-court{background:transparent;color:#4a5568;border:none;cursor:pointer;font-size:13px;padding:1px 4px;border-radius:4px;line-height:1;transition:all .15s;}
+.btn-del-court:hover{color:var(--lose);background:rgba(231,111,81,.12);}
+
+/* player picker bottom sheet */
+#playerPicker{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.6);}
+#playerPicker.open{display:flex;align-items:flex-end;}
+.picker-sheet{background:var(--bg2);border-radius:18px 18px 0 0;width:100%;padding:16px 16px 32px;max-height:70vh;overflow-y:auto;-webkit-overflow-scrolling:touch;animation:slideUp .25s ease;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.picker-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--gl);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.picker-close{background:transparent;border:none;color:var(--mut);font-size:20px;cursor:pointer;padding:0 4px;}
+.picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:7px;}
+.picker-item{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:8px 10px;cursor:pointer;transition:all .2s;}
+.picker-item:hover,.picker-item:active{border-color:var(--gl);background:rgba(82,183,136,.08);}
+.picker-item .dav{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;}
+.picker-item-name{font-size:12px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.picker-item-elo{font-size:10px;font-weight:700;}
+
+@media(max-width:560px){.hdr-stats{display:none;}.cgrid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- INSTALL BANNER -->
+<div id="installBanner">
+  <div class="ib-text">
+    <div class="ib-title">📲 Cài app lên điện thoại — offline, lưu dữ liệu!</div>
+    <div class="ib-sub" id="ib-sub"></div>
+  </div>
+  <div class="ib-btns">
+    <button class="btn btn-acc btn-sm" id="ib-install" onclick="doInstall()">⬇ Cài ngay</button>
+    <button class="btn btn-ghost btn-sm" onclick="dismissBanner()">✕</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <h1>🏓 Pickleball Social</h1>
+    <div class="sub">ELO Smart Matchmaking</div>
+  </div>
+  <div class="hdr-stats">
+    <div class="hstat"><div class="v" id="hP">16</div><div class="l">Người</div></div>
+    <div class="hstat"><div class="v" id="hR">0</div><div class="l">Lượt</div></div>
+    <div class="hstat"><div class="v" id="hM">0</div><div class="l">Trận KQ</div></div>
+    <div class="hstat" title="Tự lưu vào điện thoại"><div class="v" style="font-size:17px;line-height:1.4">💾</div><div class="l" id="saveLbl">Tự lưu</div></div>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="tab('play')">🏟 Xếp Trận</button>
+  <button class="tab" onclick="tab('score')">📊 Nhập Điểm</button>
+  <button class="tab" onclick="tab('board')">🏆 Bảng ELO</button>
+  <button class="tab" onclick="tab('history')">📋 Lịch Sử</button>
+  <button class="tab" onclick="tab('players')">👥 Người Chơi</button>
+  <button class="tab" onclick="tab('guide')">📲 Cài App</button>
+</div>
+
+<!-- PAGE PLAY -->
+<div class="page active" id="page-play">
+  <div class="legend">
+    <div class="leg"><div class="dot" style="background:var(--A)"></div>A – Giỏi</div>
+    <div class="leg"><div class="dot" style="background:var(--B)"></div>B – Trung bình</div>
+    <div class="leg"><div class="dot" style="background:var(--C)"></div>C – Mới chơi</div>
+    <div class="leg">⚡ ELO = kỹ năng thực tế</div>
+    <div class="leg">🟢 Cân bằng &nbsp;🟡 Nhẹ &nbsp;🔴 Chênh</div>
+  </div>
+  <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px;align-items:center;">
+    <button class="btn btn-green" onclick="generateRound()">▶ Tạo lượt trận mới</button>
+    <button class="btn btn-ghost" onclick="openAdd()">+ Thêm người</button>
+    <button class="btn btn-ghost" onclick="openCourtMgr()" style="color:var(--acc);border-color:var(--acc);">🏟 Quản lý sân</button>
+    <button class="btn btn-ghost" onclick="resetAll()" style="color:var(--lose);border-color:var(--lose);">↺ Reset</button>
+    <div style="display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:5px 10px;">
+      <span style="font-size:11px;color:var(--mut);white-space:nowrap;">🏟 Số sân:</span>
+      <button onclick="setNumCourts(numCourts-1)" style="width:26px;height:26px;border-radius:5px;border:1px solid var(--bdr);background:transparent;color:var(--txt);font-size:16px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;" title="Giảm">−</button>
+      <input id="numCourtsInput" type="number" min="1" max="10" value="3"
+        onchange="setNumCourts(parseInt(this.value)||1)"
+        oninput="setNumCourts(parseInt(this.value)||1)"
+        style="width:38px;background:var(--bg);border:1px solid var(--bdr);border-radius:6px;color:var(--txt);font-family:'Bebas Neue',sans-serif;font-size:20px;text-align:center;padding:2px 4px;outline:none;">
+      <button onclick="setNumCourts(numCourts+1)" style="width:26px;height:26px;border-radius:5px;border:1px solid var(--bdr);background:transparent;color:var(--txt);font-size:16px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;" title="Tăng">+</button>
+    </div>
+    <span id="courtInfo" style="font-size:12px;color:var(--mut);"></span>
+  </div>
+  <div class="sec">🏟 Lượt <span id="roundLbl" style="color:var(--acc)">–</span></div>
+  <div class="cgrid" id="cgrid">
+    <div style="color:var(--mut);font-size:14px;padding:20px;grid-column:1/-1;">Nhấn "Tạo lượt trận mới" để bắt đầu...</div>
+  </div>
+  <div style="margin-bottom:18px;">
+    <div class="sec">💺 Đang nghỉ lượt này</div>
+    <div class="bench" id="bench"><span style="color:var(--mut);font-size:13px;">–</span></div>
+  </div>
+</div>
+
+<!-- PAGE SCORE -->
+<div class="page" id="page-score">
+  <div class="panel">
+    <div class="sec">📊 Nhập Kết Quả & Cập Nhật ELO</div>
+    <p style="font-size:13px;color:var(--mut);margin-bottom:16px;">Nhập tỉ số từng trận — ELO tự động cập nhật, ghép cặp lượt sau chính xác hơn.</p>
+    <div id="scoreArea"><div style="color:var(--mut);font-size:13px;">Tạo ít nhất 1 lượt trận trước.</div></div>
+  </div>
+</div>
+
+<!-- PAGE BOARD -->
+<div class="page" id="page-board">
+  <div class="panel">
+    <div class="sec">🏆 Bảng Xếp Hạng ELO</div>
+    <p style="font-size:12px;color:var(--mut);margin-bottom:14px;">Thắng đội mạnh hơn = nhiều ELO hơn. Cập nhật sau mỗi kết quả.</p>
+    <div class="lboard" id="lboard"><div style="color:var(--mut);font-size:13px;">Chưa có dữ liệu.</div></div>
+  </div>
+</div>
+
+<!-- PAGE HISTORY -->
+<div class="page" id="page-history">
+  <div class="panel">
+    <div class="sec">📋 Lịch Sử Các Lượt</div>
+    <div class="hlist" id="hlist"><div style="color:var(--mut);font-size:13px;">Chưa có lượt nào.</div></div>
+  </div>
+</div>
+
+<!-- PAGE PLAYERS -->
+<div class="page" id="page-players">
+  <div class="panel">
+    <div class="sec">👥 Danh Sách Người Chơi</div>
+    <p style="font-size:12px;color:var(--mut);margin-bottom:13px;">Click A/B/C để đổi trình độ · Bấm ✕ để xoá người chơi</p>
+    <div class="pgrid" id="pgrid"></div>
+    <button class="btn btn-ghost btn-sm" onclick="openAdd()">+ Thêm người</button>
+  </div>
+</div>
+
+<!-- PAGE GUIDE -->
+<div class="page" id="page-guide">
+  <div class="panel">
+    <div class="sec">📲 Cài App & Backup</div>
+    <div style="display:grid;gap:11px;">
+      <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:11px;padding:15px;">
+        <div style="font-size:13px;font-weight:700;color:var(--A);margin-bottom:9px;">🤖 Android (Chrome)</div>
+        <div style="font-size:12px;color:var(--mut);line-height:2.1;">
+          1. Mở file này bằng <b style="color:var(--txt)">Chrome</b><br>
+          2. Bấm menu <b style="color:var(--txt)">⋮</b> góc trên phải<br>
+          3. Chọn <b style="color:var(--txt)">"Thêm vào màn hình chính"</b><br>
+          4. Bấm Thêm → Icon app xuất hiện ✅
+        </div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:11px;padding:15px;">
+        <div style="font-size:13px;font-weight:700;color:var(--B);margin-bottom:9px;">🍎 iPhone / iPad (Safari)</div>
+        <div style="font-size:12px;color:var(--mut);line-height:2.1;">
+          1. Mở file trong <b style="color:var(--txt)">Safari</b> (bắt buộc)<br>
+          2. Bấm nút <b style="color:var(--txt)">⎙ Chia sẻ</b> thanh dưới<br>
+          3. Kéo xuống → <b style="color:var(--txt)">"Thêm vào Màn hình chính"</b><br>
+          4. Bấm Thêm → Icon app xuất hiện ✅
+        </div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:11px;padding:15px;">
+        <div style="font-size:13px;font-weight:700;color:var(--gl);margin-bottom:9px;">💾 Dữ liệu lưu thế nào?</div>
+        <div style="font-size:12px;color:var(--mut);line-height:2.1;">
+          • Tự lưu vào bộ nhớ điện thoại sau mỗi thao tác<br>
+          • Tắt app, tắt máy → mở lại vẫn còn nguyên<br>
+          • Không cần internet sau lần tải đầu tiên
+        </div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:11px;padding:15px;">
+        <div style="font-size:13px;font-weight:700;color:var(--acc);margin-bottom:9px;">📤 Xuất / Nhập dữ liệu</div>
+        <div style="font-size:12px;color:var(--mut);margin-bottom:11px;">Backup hoặc chuyển sang điện thoại khác:</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px;">
+          <button class="btn btn-ghost btn-sm" onclick="doExport()">📤 Xuất dữ liệu</button>
+          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importBox').style.display='block'">📥 Nhập dữ liệu</button>
+        </div>
+        <div id="exportBox" style="display:none;">
+          <textarea id="exportText" style="width:100%;height:70px;background:var(--bg);border:1px solid var(--bdr);border-radius:7px;color:var(--txt);font-size:10px;padding:8px;font-family:monospace;resize:none;outline:none;" readonly></textarea>
+          <button class="btn btn-green btn-sm" style="margin-top:7px" onclick="doCopy()">📋 Copy</button>
+        </div>
+        <div id="importBox" style="display:none;margin-top:8px;">
+          <textarea id="importText" style="width:100%;height:70px;background:var(--bg);border:1px solid var(--bdr);border-radius:7px;color:var(--txt);font-size:10px;padding:8px;font-family:monospace;resize:none;outline:none;" placeholder="Dán dữ liệu backup vào đây..."></textarea>
+          <button class="btn btn-acc btn-sm" style="margin-top:7px" onclick="doImport()">✅ Khôi phục</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<!-- COURT MANAGER MODAL -->
+<div class="overlay" id="courtMgrModal">
+  <div class="mgt-modal">
+    <h3>🏟 Quản Lý Sân</h3>
+
+    <!-- Add new court -->
+    <div class="add-court-row">
+      <input class="add-court-inp" id="newCourtName" placeholder="Tên sân mới (VD: Sân VIP...)">
+      <button class="btn btn-acc btn-sm" onclick="addCourt()">+ Sân</button>
+    </div>
+
+    <!-- Pool of unassigned players -->
+    <div class="pool-lbl">👥 Chưa vào sân</div>
+    <div class="pool-area" id="mgr-pool"
+      ondragover="dragOver(event,'pool',-1)"
+      ondrop="dropOn(event,'pool',-1)"
+      ondragleave="dragLeave(event)">
+      <div id="pool-chips" style="display:flex;flex-wrap:wrap;gap:5px;min-height:26px;"></div>
+    </div>
+
+    <!-- Courts -->
+    <div id="mgr-courts" style="margin-bottom:12px;"></div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-green" onclick="applyCourtMgr()">✅ Áp dụng</button>
+      <button class="btn btn-ghost" onclick="closeCourtMgr()">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<!-- PLAYER PICKER BOTTOM SHEET -->
+<div id="playerPicker">
+  <div class="picker-sheet">
+    <div class="picker-title">
+      <span id="pickerTitle">Chọn người chơi</span>
+      <button class="picker-close" onclick="closePicker()">✕</button>
+    </div>
+    <div class="picker-grid" id="pickerGrid"></div>
+  </div>
+</div>
+
+<!-- ADD PLAYER MODAL -->
+<div class="overlay" id="addModal">
+  <div class="modal">
+    <h3>➕ Thêm người chơi</h3>
+    <div class="field"><label>Tên</label><input type="text" id="newName" placeholder="Nhập tên..."></div>
+    <label style="font-size:11px;color:var(--mut);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:7px;">Trình độ ban đầu</label>
+    <div class="mrank-row">
+      <button class="mrank" id="mrA" onclick="pickRank('A')">A</button>
+      <button class="mrank onB" id="mrB" onclick="pickRank('B')">B</button>
+      <button class="mrank" id="mrC" onclick="pickRank('C')">C</button>
+    </div>
+    <div class="mbtns">
+      <button class="btn btn-green" onclick="addPlayer()">Thêm</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Huỷ</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════
+//  CONSTANTS & STATE
+// ═══════════════════════════════
+const RC = {A:'#f4a261', B:'#74b3ce', C:'#a8dadc'};
+const BASE_ELO = {A:1400, B:1200, C:1000};
+const SAVE_KEY = 'pkl_v4';
+const K = 32;
+
+let players = [
+  {id:1,  name:'Anh Tuấn',   rank:'A', elo:1400, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:2,  name:'Bảo Châu',   rank:'A', elo:1400, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:3,  name:'Cường Đức',  rank:'A', elo:1400, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:4,  name:'Duy Hùng',   rank:'A', elo:1400, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:5,  name:'Gia Huy',    rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:6,  name:'Hải Nam',    rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:7,  name:'Lan Phương', rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:8,  name:'Minh Quân',  rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:9,  name:'Ngọc Linh',  rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:10, name:'Phú Thịnh',  rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:11, name:'Quỳnh Anh',  rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:12, name:'Thanh Sơn',  rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:13, name:'Uyên Nhi',   rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:14, name:'Vân Khánh',  rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:15, name:'Xuân Mai',   rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:16, name:'Yến Nhi',    rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
+];
+let curRound = 0;
+let curMatches = [];
+let curBench = [];
+let history = [];
+let totalScored = 0;
+let matchCtr = 0;
+let newRank = 'B';
+let numCourts = 3; // fixed number of courts per round
+
+// ═══════════════════════════════
+//  LOCALSTORAGE
+// ═══════════════════════════════
+function save() {
+  try {
+    const rounds = history.map(function(rh) {
+      return {
+        round: rh.round,
+        matches: rh.matches.map(function(m) {
+          return {
+            id: m.id, round: m.round, type: m.type, courtName: m.courtName||'',
+            t1: m.team1.map(function(p){return p.id;}),
+            t2: m.team2.map(function(p){return p.id;}),
+            s1: m.score1, s2: m.score2, scored: m.scored
+          };
+        })
+      };
+    });
+    var state = {
+      players: players,
+      curRound: curRound,
+      totalScored: totalScored,
+      matchCtr: matchCtr,
+      numCourts: numCourts,
+      rounds: rounds,
+      benchIds: curBench.map(function(p){return p.id;}),
+      pairHistory: pairHistory
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    var el = document.getElementById('saveLbl');
+    if (el) { el.textContent = 'Đã lưu ✓'; setTimeout(function(){el.textContent='Tự lưu';}, 1400); }
+  } catch(e) { console.warn('save error', e); }
+}
+
+function load() {
+  try {
+    var raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return false;
+    var s = JSON.parse(raw);
+    players    = s.players;
+    curRound   = s.curRound   || 0;
+    totalScored= s.totalScored|| 0;
+    matchCtr   = s.matchCtr   || 0;
+    if (s.numCourts) { numCourts = s.numCourts; }
+    history = (s.rounds || []).map(function(rh) {
+      return {
+        round: rh.round,
+        matches: rh.matches.map(function(m) {
+          return {
+            id: m.id, round: m.round, type: m.type, courtName: m.courtName||'',
+            team1: m.t1.map(function(id){return getP(id);}).filter(Boolean),
+            team2: m.t2.map(function(id){return getP(id);}).filter(Boolean),
+            score1: m.s1, score2: m.s2, scored: m.scored
+          };
+        })
+      };
+    });
+    if (history.length) curMatches = history[history.length-1].matches;
+    curBench = (s.benchIds || []).map(function(id){return getP(id);}).filter(Boolean);
+    pairHistory = s.pairHistory || {};
+    return true;
+  } catch(e) { console.warn('load error', e); return false; }
+}
+
+// ═══════════════════════════════
+//  HELPERS
+// ═══════════════════════════════
+function getP(id) { return players.find(function(p){return p.id===id;}); }
+function ini(name) { return name.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase(); }
+function tElo(team) { return (team[0].elo + team[1].elo) / 2; }
+function tNames(team) { return team.map(function(p){return p.name.split(' ').pop();}).join(' & '); }
+function clamp(v,a,b) { return Math.max(a, Math.min(b, v)); }
+
+// ═══════════════════════════════
+//  ELO
+// ═══════════════════════════════
+function applyElo(match, s1, s2) {
+  if (match.scored) return;
+  var eA = tElo(match.team1), eB = tElo(match.team2);
+  var expA = 1 / (1 + Math.pow(10, (eB - eA) / 400));
+  var sA = s1 > s2 ? 1 : 0;
+  var sB = 1 - sA;
+  var scale = 1 + (Math.abs(s1 - s2) / 11) * 0.4;
+  var dA = Math.round(K * scale * (sA - expA));
+
+  match.team1.forEach(function(p) {
+    var pl = getP(p.id); if (!pl) return;
+    pl.elo = clamp(pl.elo + dA, 600, 2400);
+    pl.delta = dA; pl.games++;
+    if (sA === 1) { pl.wins++; pl.form.push('W'); }
+    else          { pl.losses++; pl.form.push('L'); }
+    if (pl.form.length > 5) pl.form.shift();
+  });
+  match.team2.forEach(function(p) {
+    var pl = getP(p.id); if (!pl) return;
+    pl.elo = clamp(pl.elo - dA, 600, 2400);
+    pl.delta = -dA; pl.games++;
+    if (sB === 1) { pl.wins++; pl.form.push('W'); }
+    else          { pl.losses++; pl.form.push('L'); }
+    if (pl.form.length > 5) pl.form.shift();
+  });
+  match.score1 = s1; match.score2 = s2; match.scored = true;
+  totalScored++;
+}
+
+// ═══════════════════════════════
+//  MATCHMAKING
+// ═══════════════════════════════
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length-1; i > 0; i--) {
+    var j = Math.floor(Math.random()*(i+1));
+    var t = a[i]; a[i]=a[j]; a[j]=t;
+  }
+  return a;
+}
+
+function sortByGames(arr) {
+  var min = Math.min.apply(null, arr.map(function(p){return p.games;}));
+  var pri = shuffle(arr.filter(function(p){return p.games <= min+1;}));
+  var rest = shuffle(arr.filter(function(p){return p.games > min+1;}));
+  return pri.concat(rest);
+}
+
+function bestSplit(four) {
+  var s = four.slice().sort(function(a,b){return a.elo-b.elo;});
+  var optAC = Math.abs((s[0].elo+s[3].elo)/2 - (s[1].elo+s[2].elo)/2);
+  var optAB = Math.abs((s[0].elo+s[1].elo)/2 - (s[2].elo+s[3].elo)/2);
+  return optAC <= optAB
+    ? {team1:[s[0],s[3]], team2:[s[1],s[2]]}
+    : {team1:[s[0],s[1]], team2:[s[2],s[3]]};
+}
+
+function setNumCourts(n) {
+  n = Math.max(1, Math.min(10, parseInt(n) || 1));
+  numCourts = n;
+  var inp = document.getElementById('numCourtsInput');
+  if (inp && parseInt(inp.value) !== n) inp.value = n;
+  updateCourtInfo();
+  save();
+}
+
+function generateRound() {
+  var matches = [];
+  var used = {};
+
+  // ── Ưu tiên bench: người nghỉ lượt trước phải được chơi trước ──
+  // Sắp xếp toàn bộ theo: (1) số trận ít hơn trước, (2) người bench lượt trước ưu tiên +tiebreak
+  var prevBenchIds = curBench.map(function(p){ return p.id; });
+
+  var sorted = players.slice().sort(function(a, b) {
+    // Ưu tiên người ít trận hơn
+    if (a.games !== b.games) return a.games - b.games;
+    // Cùng số trận: bench trước
+    var aB = prevBenchIds.indexOf(a.id) >= 0 ? 0 : 1;
+    var bB = prevBenchIds.indexOf(b.id) >= 0 ? 0 : 1;
+    return aB - bB;
+  });
+
+  // Lấy numCourts*4 người ưu tiên nhất để vào sân
+  var playingPool = sorted.slice(0, numCourts * 4);
+  var benchPool   = sorted.slice(numCourts * 4);
+
+  // Nếu không đủ người
+  if (playingPool.length < 4) {
+    toast('⚠ Không đủ người cho ' + numCourts + ' sân (cần ít nhất ' + (numCourts * 4) + ' người)!');
+    return;
+  }
+
+  // Chia playingPool thành các nhóm 4 người cân bằng nhất
+  // Dùng thuật toán: chọn lần lượt từng sân, mỗi lần lấy 4 người tốt nhất từ pool còn lại
+  var remaining = playingPool.slice();
+
+  for (var c = 0; c < numCourts; c++) {
+    if (remaining.length < 4) break;
+
+    var four;
+    if (remaining.length === 4) {
+      four = remaining.slice();
+    } else {
+      // Pick best balanced 4 from remaining (cân bằng ELO + xoay cặp)
+      four = pickBestFourBalanced(remaining);
+    }
+    if (!four) break;
+
+    four.forEach(function(p){ used[p.id] = true; });
+    remaining = remaining.filter(function(p){ return !used[p.id]; });
+
+    var sp = bestSplit(four);
+    var ranks = four.map(function(p){ return p.rank; });
+    var uniqR = ranks.filter(function(r, i){ return ranks.indexOf(r) === i; });
+    var type = uniqR.length === 1 ? uniqR[0] : 'MIX';
+    var prevName = (curMatches[c] && curMatches[c].courtName) ? curMatches[c].courtName : ('Sân ' + (c + 1));
+    matches.push({
+      id: matchCtr++, round: curRound + 1, type: type, courtName: prevName,
+      team1: sp.team1, team2: sp.team2, score1: null, score2: null, scored: false
+    });
+  }
+
+  if (!matches.length) {
+    toast('⚠ Không đủ người cho ' + numCourts + ' sân!');
+    return;
+  }
+
+  curRound++;
+  curMatches = matches;
+  // Bench = những người không vào sân lượt này (benchPool + remaining nếu có)
+  curBench = players.filter(function(p){ return !used[p.id]; });
+  history.push({ round: curRound, matches: matches });
+
+  matches.forEach(function(m) {
+    incPair(m.team1[0].id, m.team1[1].id);
+    incPair(m.team2[0].id, m.team2[1].id);
+  });
+
+  renderCourts(); renderBench(); renderScore(); renderHistory(); renderBoard(); renderPlayers(); updateStats();
+  document.getElementById('roundLbl').textContent = curRound;
+
+  var benchNames = curBench.map(function(p){ return p.name.split(' ').pop(); }).join(', ');
+  toast('✅ Lượt ' + curRound + ' — ' + matches.length + ' sân'
+    + (curBench.length ? ' · Nghỉ: ' + benchNames : ' · Tất cả đều chơi 🎉'));
+  save();
+}
+
+// Chọn 4 người cân bằng nhất từ pool (ưu tiên xoay cặp + ELO)
+function pickBestFourBalanced(pool) {
+  if (pool.length < 4) return null;
+  // Giới hạn 12 người đầu (đã được sort theo games) để tránh O(n^4) chậm
+  var cands = pool.slice(0, 12);
+  var bestScore = Infinity, bestFour = null;
+
+  for (var a = 0; a < cands.length; a++)
+    for (var b = a+1; b < cands.length; b++)
+      for (var c = b+1; c < cands.length; c++)
+        for (var d = c+1; d < cands.length; d++) {
+          var four = [cands[a], cands[b], cands[c], cands[d]];
+          var sp = bestSplit(four);
+          var eloGap = Math.abs(tElo(sp.team1) - tElo(sp.team2));
+          var pairRep = getPairCount(sp.team1[0].id, sp.team1[1].id)
+                      + getPairCount(sp.team2[0].id, sp.team2[1].id);
+          // Không còn penalty cho games vì pool đã được pre-sort theo ưu tiên
+          var sc = pairRep * 300 + eloGap * 0.1;
+          if (sc < bestScore) { bestScore = sc; bestFour = four; }
+        }
+  return bestFour;
+}
+
+// ═══════════════════════════════
+//  RENDER COURTS (updated with inline score)
+// ═══════════════════════════════
+function balanceLbl(t1, t2) {
+  var d = Math.abs(tElo(t1) - tElo(t2));
+  return d<=30 ? '🟢 Cân bằng' : d<=80 ? '🟡 Chênh nhẹ' : '🔴 Chênh';
+}
+
+function chipHTML(p) {
+  var pl = getP(p.id) || p;
+  return '<div class="chip">'
+    + '<div class="chav" style="background:'+RC[pl.rank]+'22;color:'+RC[pl.rank]+'">'+ini(pl.name)+'</div>'
+    + '<div class="chname">'+pl.name+'</div>'
+    + '<div class="chelo" style="color:'+RC[pl.rank]+'">'+Math.round(pl.elo)+'</div>'
+    + '</div>';
+}
+
+function renderCourts() {
+  var g = document.getElementById('cgrid');
+  if (!curMatches.length) {
+    g.innerHTML = '<div style="color:var(--mut);font-size:14px;padding:20px;grid-column:1/-1;">Nhấn "Tạo lượt trận mới" để bắt đầu...</div>';
+    return;
+  }
+
+  // Group matches into pairs (2 courts playing simultaneously)
+  var html = '';
+  for (var gi = 0; gi < curMatches.length; gi += 2) {
+    var pair = curMatches.slice(gi, gi + 2);
+    var groupNum = Math.floor(gi / 2) + 1;
+    var allScored = pair.every(function(m){ return m.scored; });
+    var anyScored = pair.some(function(m){ return m.scored; });
+    var statusIcon = allScored ? '✅' : anyScored ? '🔄' : '▶';
+    var statusColor = allScored ? 'var(--win)' : anyScored ? 'var(--acc)' : 'var(--gl)';
+
+    html += '<div class="court-group-lbl" style="color:'+statusColor+'">'
+      + statusIcon + ' HIỆP ' + groupNum
+      + (pair.length === 2 ? ' &nbsp;·&nbsp; 2 sân đồng thời' : '')
+      + '</div>';
+
+    pair.forEach(function(m, li) {
+      var i = gi + li;
+      var eA = Math.round(tElo(m.team1)), eB = Math.round(tElo(m.team2));
+      var courtLabel = m.courtName || ('SÂN ' + (i+1));
+      var savedHTML = m.scored
+        ? '<div class="saved-bar" style="justify-content:space-between;">'+
+          '<span>✅ <span style="color:var(--win);font-weight:700">'
+          + (m.score1>m.score2?tNames(m.team1):tNames(m.team2))
+          + ' thắng</span> <span style="color:var(--mut)">'
+          + Math.max(m.score1,m.score2)+'–'+Math.min(m.score1,m.score2)+'</span></span>'
+          + '<button class="btn btn-ghost btn-sm" onclick="editScore('+m.id+')" style="font-size:10px;padding:2px 8px;color:var(--acc);border-color:var(--acc);flex-shrink:0;">✏️ Sửa</button>'
+          + '</div>'
+        : '';
+      var inlineScore = m.scored ? '' :
+        '<div class="inline-score">'
+        + '<div style="font-size:10px;color:var(--mut);text-align:center;margin-bottom:6px;letter-spacing:1px">NHẬP ĐIỂM NHANH</div>'
+        + '<div class="isrow">'
+        + '<div style="text-align:center"><div class="islbl">'+tNames(m.team1)+'</div>'
+        + '<input class="score-in-sm" id="cs1-'+m.id+'" type="number" min="0" max="21" placeholder="11"></div>'
+        + '<span style="font-family:\'Bebas Neue\',sans-serif;font-size:18px;color:var(--mut);margin:0 4px">–</span>'
+        + '<div style="text-align:center"><input class="score-in-sm" id="cs2-'+m.id+'" type="number" min="0" max="21" placeholder="9">'
+        + '<div class="islbl">'+tNames(m.team2)+'</div></div>'
+        + '</div>'
+        + '<button class="btn btn-green btn-sm" style="width:100%;justify-content:center;margin-top:8px;" onclick="saveScoreInline('+m.id+')">💾 Lưu & ELO</button>'
+        + '</div>';
+      html += '<div class="court live" style="animation-delay:'+i*.07+'s">'
+        + '<div class="chdr">'
+        + '<div class="cname">'+courtLabel+'</div>'
+        + '<div style="display:flex;gap:6px;align-items:center;">'
+        + '<span style="font-size:10px;color:var(--mut)">'+balanceLbl(m.team1,m.team2)+'</span>'
+        + '<div class="cbadge cb'+m.type+'">'+m.type+'</div>'
+        + '</div></div>'
+        + '<div class="cbody">'
+        + '<div class="mrow">'
+        + '<div class="team">'+chipHTML(m.team1[0])+chipHTML(m.team1[1])
+        + '<div style="font-size:10px;color:var(--mut);text-align:center;margin-top:2px">ELO '+eA+'</div></div>'
+        + '<div class="vs">VS</div>'
+        + '<div class="team">'+chipHTML(m.team2[0])+chipHTML(m.team2[1])
+        + '<div style="font-size:10px;color:var(--mut);text-align:center;margin-top:2px">ELO '+eB+'</div></div>'
+        + '</div>'+savedHTML+inlineScore+'</div></div>';
+    });
+  }
+  g.innerHTML = html;
+}
+
+// Inline score save from court card
+function saveScoreInline(matchId) {
+  var match = null;
+  for (var i=0; i<history.length; i++) {
+    for (var j=0; j<history[i].matches.length; j++) {
+      if (history[i].matches[j].id === matchId) { match = history[i].matches[j]; break; }
+    }
+    if (match) break;
+  }
+  if (!match) return;
+  var el1 = document.getElementById('cs1-'+matchId);
+  var el2 = document.getElementById('cs2-'+matchId);
+  if (!el1||!el2) return;
+  var s1 = parseInt(el1.value), s2 = parseInt(el2.value);
+  if (isNaN(s1)||isNaN(s2)||s1<0||s2<0) { toast('⚠ Nhập tỉ số hợp lệ!'); return; }
+  if (s1===s2) { toast('⚠ Không thể hoà — phải có người thắng!'); return; }
+  applyElo(match, s1, s2);
+  var cm = curMatches.find(function(m){return m.id===matchId;});
+  if (cm) { cm.scored=true; cm.score1=s1; cm.score2=s2; }
+  renderScore(); renderBoard(); renderHistory(); renderCourts(); renderPlayers(); updateStats();
+  toast('🏆 ' + (s1>s2?tNames(match.team1):tNames(match.team2)) + ' thắng ' + Math.max(s1,s2) + '–' + Math.min(s1,s2) + ' · ELO cập nhật!');
+  save();
+}
+
+// ═══════════════════════════════
+//  COURT MANAGER STATE
+// ═══════════════════════════════
+var mgrCourts = []; // [{id, name, slots:[pid|null x4]}]
+var mgrPool = [];   // player ids unassigned
+var dragSrc = null; // {type:'pool'|'court', courtIdx, slotIdx, playerId}
+var mgrCourtCounter = 0;
+
+// pairHistory[idA][idB] = number of times A & B were on same team
+var pairHistory = {};
+
+function openCourtMgr() {
+  // Build from curMatches if exists, else empty
+  mgrCourts = [];
+  mgrPool = [];
+  mgrCourtCounter = 0;
+  var usedIds = {};
+
+  if (curMatches.length) {
+    curMatches.forEach(function(m, i) {
+      var courtId = 'c' + (++mgrCourtCounter);
+      var slots = [m.team1[0].id, m.team1[1].id, m.team2[0].id, m.team2[1].id];
+      slots.forEach(function(id){ usedIds[id]=true; });
+      mgrCourts.push({id:courtId, name:m.courtName||('Sân '+(i+1)), slots:slots, matchId:m.id, type:m.type, scored:m.scored});
+    });
+    // Add bench to pool
+    curBench.forEach(function(p){ if(!usedIds[p.id]){ mgrPool.push(p.id); usedIds[p.id]=true; } });
+  } else {
+    // No matches yet — all players in pool
+    players.forEach(function(p){ mgrPool.push(p.id); });
+    // Default 2 courts (always 2 play simultaneously)
+    var numCourts = Math.max(2, Math.floor(players.length / 4));
+    for (var i=0; i<numCourts; i++) {
+      mgrCourts.push({id:'c'+(++mgrCourtCounter), name:'Sân '+(i+1), slots:[null,null,null,null], matchId:null, type:'MIX', scored:false});
+    }
+    // Auto-fill courts with smart pairing
+    mgrCourts.forEach(function(court) {
+      if (mgrPool.length >= 4) {
+        var best = smartPickFour(mgrPool);
+        if (best) {
+          best.forEach(function(pid){ mgrPool = mgrPool.filter(function(x){return x!==pid;}); });
+          court.slots = best;
+        }
+      }
+    });
+  }
+
+  renderMgr();
+  document.getElementById('courtMgrModal').classList.add('open');
+}
+
+function closeCourtMgr() {
+  document.getElementById('courtMgrModal').classList.remove('open');
+}
+
+function addCourt() {
+  var inp = document.getElementById('newCourtName');
+  var name = inp.value.trim() || ('Sân ' + (mgrCourts.length+1));
+  var newCourt = {id:'c'+(++mgrCourtCounter), name:name, slots:[null,null,null,null], matchId:null, type:'MIX', scored:false};
+  mgrCourts.push(newCourt);
+  inp.value = '';
+
+  // Auto-assign players from pool if >= 4 available
+  if (mgrPool.length >= 4) {
+    var best = smartPickFour(mgrPool);
+    if (best) {
+      best.forEach(function(pid){ mgrPool = mgrPool.filter(function(x){return x!==pid;}); });
+      newCourt.slots = best;
+    }
+  }
+  renderMgr();
+}
+
+function removeMgrCourt(idx) {
+  var court = mgrCourts[idx];
+  // Return players to pool
+  court.slots.forEach(function(pid){ if(pid && mgrPool.indexOf(pid)<0) mgrPool.push(pid); });
+  mgrCourts.splice(idx,1);
+  renderMgr();
+}
+
+function renderMgr() {
+  // ── Pool ──
+  var poolEl = document.getElementById('pool-chips');
+  if (!poolEl) return;
+  if (!mgrPool.length) {
+    poolEl.innerHTML = '<span style="color:var(--win);font-size:12px;font-weight:600;">\u2705 T\u1ea5t c\u1ea3 \u0111\u00e3 v\u00e0o s\u00e2n!</span>';
+  } else {
+    poolEl.innerHTML = mgrPool.map(function(pid) {
+      var p = getP(pid); if(!p) return '';
+      return '<div class="pool-chip" draggable="true"'
+        + ' data-pid="'+pid+'" data-src="pool" data-ci="-1" data-si="-1"'
+        + ' ondragstart="dragStart(event,'+pid+',\'pool\',-1,-1)"'
+        + ' ondragend="dragEnd(event)">'
+        + '<div class="dav" style="background:'+RC[p.rank]+'22;color:'+RC[p.rank]+'">'+ini(p.name)+'</div>'
+        + '<span>'+p.name+'</span>'
+        + '<span style="font-size:9px;font-weight:700;color:'+RC[p.rank]+'">'+p.rank+'</span>'
+        + '</div>';
+    }).join('');
+  }
+
+  // ── Courts ──
+  var courtsEl = document.getElementById('mgr-courts');
+  if (!mgrCourts.length) {
+    courtsEl.innerHTML = '<div style="color:var(--mut);font-size:13px;text-align:center;padding:12px;">Ch\u01b0a c\u00f3 s\u00e2n n\u00e0o.</div>';
+    return;
+  }
+
+  courtsEl.innerHTML = mgrCourts.map(function(court, ci) {
+    var filled = court.slots.filter(function(s){return s!==null;}).length;
+    var statusColor = filled===4 ? 'var(--win)' : filled===0 ? 'var(--mut)' : 'var(--acc)';
+
+    var slotsHTML = [0,1,2,3].map(function(si) {
+      var pid = court.slots[si];
+      var p = pid ? getP(pid) : null;
+      var teamLbls = ['\u0110\u1ed9i 1 \u00b7 \u2460','\u0110\u1ed9i 1 \u00b7 \u2461','\u0110\u1ed9i 2 \u00b7 \u2460','\u0110\u1ed9i 2 \u00b7 \u2461'];
+
+      var bodyHTML;
+      if (p) {
+        bodyHTML = '<div class="slot-chip"'
+          + ' draggable="true"'
+          + ' data-pid="'+pid+'" data-src="court" data-ci="'+ci+'" data-si="'+si+'"'
+          + ' ondragstart="dragStart(event,'+pid+',\'court\','+ci+','+si+')"'
+          + ' ondragend="dragEnd(event)">'
+          + '<div class="dav" style="background:'+RC[p.rank]+'22;color:'+RC[p.rank]+'">'+ini(p.name)+'</div>'
+          + '<span class="slot-chip-name">'+p.name+'</span>'
+          + '<span class="slot-chip-rank" style="color:'+RC[p.rank]+'">'+p.rank+'</span>'
+          + '<button class="slot-chip-del" onclick="removeFromSlot('+ci+','+si+')" title="B\u1ecf ra">\u2715</button>'
+          + '</div>';
+      } else {
+        bodyHTML = '<button class="slot-pick-btn" onclick="openPicker('+ci+','+si+')">'
+          + '<span style="font-size:15px">+</span><span>Ch\u1ecdn ng\u01b0\u1eddi</span>'
+          + '</button>';
+      }
+
+      return '<div class="cslot" id="slot-'+ci+'-'+si+'"'
+        + ' ondragover="dragOver(event,\'court\','+ci+','+si+')"'
+        + ' ondrop="dropOn(event,\'court\','+ci+','+si+')"'
+        + ' ondragleave="dragLeave(event)">'
+        + '<div class="cslot-lbl">'+teamLbls[si]+'</div>'
+        + '<div class="cslot-body">'+bodyHTML+'</div>'
+        + '</div>';
+    }).join('');
+
+    return '<div class="court-card">'
+      + '<div class="court-card-hdr">'
+      + '<input class="court-name-inp" value="'+escHTML(court.name)+'"'
+        + ' onchange="mgrCourts['+ci+'].name=this.value"'
+        + ' oninput="mgrCourts['+ci+'].name=this.value">'
+      + '<span style="font-size:11px;color:'+statusColor+';font-weight:700">'+filled+'/4</span>'
+      + (court.scored ? '<span style="font-size:10px;color:var(--win)">\u2705KQ</span>' : '')
+      + '<button class="btn btn-del" onclick="removeMgrCourt('+ci+')" title="X\u00f3a s\u00e2n" style="margin-left:auto;font-size:12px;padding:3px 8px;">\u2715 S\u00e2n</button>'
+      + '</div>'
+      + '<div class="court-slots">'+slotsHTML+'</div>'
+      + '</div>';
+  }).join('');
+
+  // Attach touch drag to all chips after render
+  document.querySelectorAll('#pool-chips .pool-chip, #mgr-courts .slot-chip').forEach(function(el) {
+    var pid     = parseInt(el.getAttribute('data-pid'));
+    var srcType = el.getAttribute('data-src');
+    var ci      = parseInt(el.getAttribute('data-ci'));
+    var si      = parseInt(el.getAttribute('data-si'));
+    if (!isNaN(pid) && srcType) setupTouchDrag(el, pid, srcType, ci, si);
+  });
+}
+
+function escHTML(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+// ── Drag & Drop (desktop mouse) ──
+function dragStart(e, pid, srcType, courtIdx, slotIdx) {
+  dragSrc = {pid:pid, srcType:srcType, courtIdx:courtIdx, slotIdx:slotIdx};
+  e.dataTransfer.effectAllowed = 'move';
+}
+function dragEnd(e) { e.target.style.opacity=''; }
+function dragOver(e, tgtType, courtIdx, slotIdx) {
+  e.preventDefault(); e.dataTransfer.dropEffect='move';
+  e.currentTarget.classList.add('drag-over');
+}
+function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function dropOn(e, tgtType, courtIdx, slotIdx) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!dragSrc) return;
+  performDrop(tgtType, courtIdx, slotIdx);
+}
+
+// ── Shared drop logic ──
+function performDrop(tgtType, courtIdx, slotIdx) {
+  if (!dragSrc) return;
+  var pid = dragSrc.pid;
+  if (dragSrc.srcType === 'pool') {
+    mgrPool = mgrPool.filter(function(id){ return id !== pid; });
+  } else {
+    mgrCourts[dragSrc.courtIdx].slots[dragSrc.slotIdx] = null;
+  }
+  if (tgtType === 'pool') {
+    if (mgrPool.indexOf(pid) < 0) mgrPool.push(pid);
+  } else {
+    var existing = mgrCourts[courtIdx].slots[slotIdx];
+    if (existing !== null && existing !== pid) {
+      if (dragSrc.srcType === 'pool') { mgrPool.push(existing); }
+      else { mgrCourts[dragSrc.courtIdx].slots[dragSrc.slotIdx] = existing; }
+    }
+    mgrCourts[courtIdx].slots[slotIdx] = pid;
+  }
+  dragSrc = null;
+  renderMgr();
+}
+
+// ── Touch Drag & Drop (iOS Safari) ──
+var touchClone = null, touchSrc = null, touchLastOver = null;
+
+function setupTouchDrag(el, pid, srcType, courtIdx, slotIdx) {
+  // Avoid double-binding
+  if (el._touchBound) return;
+  el._touchBound = true;
+
+  el.addEventListener('touchstart', function(e) {
+    e.stopPropagation();
+    dragSrc = touchSrc = {pid:pid, srcType:srcType, courtIdx:courtIdx, slotIdx:slotIdx};
+    var r = el.getBoundingClientRect();
+    touchClone = el.cloneNode(true);
+    Object.assign(touchClone.style, {
+      position:'fixed', left:r.left+'px', top:r.top+'px',
+      width:r.width+'px', opacity:'0.88', pointerEvents:'none',
+      zIndex:'9999', borderRadius:'6px', transition:'none',
+      boxShadow:'0 4px 20px rgba(0,0,0,.55)'
+    });
+    document.body.appendChild(touchClone);
+    el.style.opacity = '0.25';
+  }, {passive:true});
+
+  el.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+    if (!touchClone) return;
+    var t = e.touches[0];
+    touchClone.style.left = (t.clientX - touchClone.offsetWidth/2) + 'px';
+    touchClone.style.top  = (t.clientY - touchClone.offsetHeight/2) + 'px';
+    touchClone.style.display = 'none';
+    var under = document.elementFromPoint(t.clientX, t.clientY);
+    touchClone.style.display = '';
+    var zone = under ? (under.closest('.cslot') || under.closest('.pool-area')) : null;
+    if (touchLastOver && touchLastOver !== zone) touchLastOver.classList.remove('drag-over');
+    if (zone) { zone.classList.add('drag-over'); touchLastOver = zone; }
+    else touchLastOver = null;
+  }, {passive:false});
+
+  el.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    el.style.opacity = '';
+    if (touchClone) { touchClone.remove(); touchClone = null; }
+    var zone = touchLastOver;
+    if (zone) zone.classList.remove('drag-over');
+    touchLastOver = null;
+    if (!touchSrc) return;
+
+    if (!zone) {
+      // fallback hit-test
+      var t = e.changedTouches[0];
+      var under = document.elementFromPoint(t.clientX, t.clientY);
+      zone = under ? (under.closest('.cslot') || under.closest('.pool-area')) : null;
+    }
+
+    if (zone && zone.classList.contains('pool-area')) {
+      performDrop('pool', -1, -1);
+    } else if (zone && zone.classList.contains('cslot')) {
+      var m = zone.id.match(/slot-([0-9]+)-([0-9]+)/);
+      if (m) performDrop('court', parseInt(m[1]), parseInt(m[2]));
+      else dragSrc = null;
+    } else {
+      dragSrc = null;
+    }
+    touchSrc = null;
+  }, {passive:false});
+}
+
+// ── Player Picker (bottom sheet for iOS tap-to-assign) ──
+var pickerTarget = null;
+
+function openPicker(ci, si) {
+  pickerTarget = {ci:ci, si:si};
+  var teamLbls = ['Đội 1 · ①','Đội 1 · ②','Đội 2 · ①','Đội 2 · ②'];
+  document.getElementById('pickerTitle').textContent = teamLbls[si] + ' — ' + mgrCourts[ci].name;
+  var grid = document.getElementById('pickerGrid');
+  if (!mgrPool.length) {
+    grid.innerHTML = '<div style="color:var(--mut);font-size:13px;padding:8px;grid-column:1/-1;">Không còn người chưa vào sân.</div>';
+  } else {
+    grid.innerHTML = mgrPool.map(function(pid) {
+      var p = getP(pid); if(!p) return '';
+      return '<div class="picker-item" onclick="pickPlayer('+pid+')">'
+        + '<div class="dav" style="background:'+RC[p.rank]+'22;color:'+RC[p.rank]+';width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;">'+ini(p.name)+'</div>'
+        + '<span class="picker-item-name">'+p.name+'</span>'
+        + '<span style="font-size:10px;font-weight:700;color:'+RC[p.rank]+'">'+p.rank+'</span>'
+        + '</div>';
+    }).join('');
+  }
+  document.getElementById('playerPicker').classList.add('open');
+}
+
+function closePicker() {
+  document.getElementById('playerPicker').classList.remove('open');
+  pickerTarget = null;
+}
+
+function pickPlayer(pid) {
+  if (!pickerTarget) return;
+  var ci = pickerTarget.ci, si = pickerTarget.si;
+  mgrPool = mgrPool.filter(function(id){ return id !== pid; });
+  var old = mgrCourts[ci].slots[si];
+  if (old !== null && old !== pid && mgrPool.indexOf(old) < 0) mgrPool.push(old);
+  mgrCourts[ci].slots[si] = pid;
+  closePicker();
+  renderMgr();
+}
+
+document.getElementById('playerPicker').addEventListener('click', function(e) {
+  if (e.target === this) closePicker();
+});
+
+function removeFromSlot(ci, si) {
+  var pid = mgrCourts[ci].slots[si];
+  if (pid !== null) {
+    mgrCourts[ci].slots[si] = null;
+    if (mgrPool.indexOf(pid) < 0) mgrPool.push(pid);
+    renderMgr();
+  }
+}
+
+// ── Smart pairing: pick best 4 from pool & split into 2 balanced teams ──
+function getPairCount(a, b) {
+  var k = Math.min(a,b)+'_'+Math.max(a,b);
+  return pairHistory[k] || 0;
+}
+function incPair(a, b) {
+  var k = Math.min(a,b)+'_'+Math.max(a,b);
+  pairHistory[k] = (pairHistory[k] || 0) + 1;
+}
+
+// Returns [slot0,slot1,slot2,slot3] = [team1p1, team1p2, team2p1, team2p2]
+// Minimizes: total pair-repetition + ELO imbalance
+function smartPickFour(poolIds) {
+  if (poolIds.length < 4) return null;
+  var players4 = poolIds.map(function(id){ return getP(id); }).filter(Boolean);
+
+  // Score a group of 4: lower = better
+  // Prioritize: players with fewest games first (rotation), then pair freshness, then ELO balance
+  function groupScore(four) {
+    // Games played — prefer lower (fewer games = more rest)
+    var maxGames = Math.max.apply(null, four.map(function(p){return p.games;}));
+    var minGames = Math.min.apply(null, four.map(function(p){return p.games;}));
+    var gameBalance = maxGames - minGames; // prefer lower
+
+    // Best split for this group
+    var sp = bestSplit(four);
+    var eloGap = Math.abs(tElo(sp.team1) - tElo(sp.team2));
+
+    // Pair repetition score for the chosen split
+    var t1 = sp.team1, t2 = sp.team2;
+    var pairRep = getPairCount(t1[0].id, t1[1].id) + getPairCount(t2[0].id, t2[1].id);
+
+    return gameBalance * 50 + pairRep * 200 + eloGap * 0.1;
+  }
+
+  // Try all combinations of 4 from pool, pick best
+  var bestScore = Infinity, bestIds = null;
+  var n = players4.length;
+  // Limit search to first 12 players to avoid O(n^4) slowness
+  var candidates = players4.slice().sort(function(a,b){ return a.games - b.games; }).slice(0, 12);
+
+  for (var a=0; a<candidates.length; a++) {
+    for (var b=a+1; b<candidates.length; b++) {
+      for (var c=b+1; c<candidates.length; c++) {
+        for (var d=c+1; d<candidates.length; d++) {
+          var four = [candidates[a], candidates[b], candidates[c], candidates[d]];
+          var sc = groupScore(four);
+          if (sc < bestScore) {
+            bestScore = sc;
+            bestIds = four;
+          }
+        }
+      }
+    }
+  }
+
+  if (!bestIds) return null;
+  var sp = bestSplit(bestIds);
+  return [sp.team1[0].id, sp.team1[1].id, sp.team2[0].id, sp.team2[1].id];
+}
+
+// Apply changes from court manager
+function applyCourtMgr() {
+  var newMatches = [];
+  var allOk = true;
+
+  mgrCourts.forEach(function(court, i) {
+    var slots = court.slots;
+    var filled = slots.filter(function(s){return s!==null;});
+    if (filled.length === 0) return; // skip empty courts
+    if (filled.length !== 4) { allOk = false; return; }
+
+    var p1 = getP(slots[0]), p2 = getP(slots[1]), p3 = getP(slots[2]), p4 = getP(slots[3]);
+    if (!p1||!p2||!p3||!p4) { allOk = false; return; }
+
+    // Find existing match or create new
+    var existingMatch = null;
+    if (court.matchId !== null) {
+      for (var hi=0; hi<history.length; hi++) {
+        for (var mi=0; mi<history[hi].matches.length; mi++) {
+          if (history[hi].matches[mi].id === court.matchId) {
+            existingMatch = history[hi].matches[mi]; break;
+          }
+        }
+        if (existingMatch) break;
+      }
+    }
+
+    var ranks = [p1,p2,p3,p4].map(function(p){return p.rank;});
+    var uniqRanks = ranks.filter(function(r,i){return ranks.indexOf(r)===i;});
+    var type = uniqRanks.length===1 ? uniqRanks[0] : 'MIX';
+
+    if (existingMatch && !existingMatch.scored) {
+      // Update existing match in-place
+      existingMatch.team1 = [p1, p2];
+      existingMatch.team2 = [p3, p4];
+      existingMatch.type = type;
+      existingMatch.courtName = court.name;
+      newMatches.push(existingMatch);
+    } else if (!existingMatch) {
+      // Brand new match
+      if (curRound === 0) curRound = 1;
+      var nm = {id:matchCtr++, round:curRound, type:type, courtName:court.name,
+                team1:[p1,p2], team2:[p3,p4], score1:null, score2:null, scored:false};
+      newMatches.push(nm);
+    } else {
+      // Scored match — keep as-is but update name
+      existingMatch.courtName = court.name;
+      newMatches.push(existingMatch);
+    }
+  });
+
+  if (!allOk) { toast('⚠ Có sân chưa đủ 4 người!'); return; }
+
+  // Record pair history for new (unscored) matches
+  newMatches.forEach(function(m) {
+    if (!m.scored) {
+      incPair(m.team1[0].id, m.team1[1].id);
+      incPair(m.team2[0].id, m.team2[1].id);
+    }
+  });
+
+  // Rebuild curMatches and history for current round
+  curMatches = newMatches;
+  curBench = mgrPool.map(function(pid){return getP(pid);}).filter(Boolean);
+
+  // Sync history: update or add round
+  if (history.length && history[history.length-1].round === curRound) {
+    history[history.length-1].matches = newMatches;
+  } else if (newMatches.length) {
+    if (curRound === 0) { curRound = 1; }
+    history.push({round:curRound, matches:newMatches});
+    document.getElementById('roundLbl').textContent = curRound;
+  }
+
+  renderCourts(); renderBench(); renderScore(); renderHistory(); renderBoard(); renderPlayers(); updateStats();
+  toast('✅ Đã áp dụng '+newMatches.length+' sân!');
+  save();
+  closeCourtMgr();
+}
+
+document.getElementById('courtMgrModal').addEventListener('click', function(e){ if(e.target===this) closeCourtMgr(); });
+
+// ═══════════════════════════════
+//  RENDER BENCH
+// ═══════════════════════════════
+function renderBench() {
+  var b = document.getElementById('bench');
+  if (!curBench.length) { b.innerHTML='<span style="color:var(--mut);font-size:13px;">Tất cả đang chơi 🎉</span>'; return; }
+  b.innerHTML = curBench.map(function(p) {
+    return '<div class="bchip">'
+      +'<div style="width:18px;height:18px;border-radius:50%;background:'+RC[p.rank]+'22;color:'+RC[p.rank]+';display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700">'+ini(p.name)+'</div>'
+      +'<span>'+p.name+'</span>'
+      +'<span style="font-size:10px;font-weight:700;color:'+RC[p.rank]+'">'+p.rank+'</span>'
+      +'</div>';
+  }).join('');
+}
+
+// ═══════════════════════════════
+//  RENDER SCORE INPUT
+// ═══════════════════════════════
+function renderScore() {
+  var area = document.getElementById('scoreArea');
+  if (!history.length) { area.innerHTML='<div style="color:var(--mut);font-size:13px;">Tạo ít nhất 1 lượt trận trước.</div>'; return; }
+  area.innerHTML = history.slice().reverse().map(function(rh) {
+    var doneCount = rh.matches.filter(function(m){return m.scored;}).length;
+    return '<div style="margin-bottom:20px;">'
+      + '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:14px;color:var(--mut);letter-spacing:2px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">'
+      + 'LƯỢT '+rh.round
+      + '<span style="flex:1;height:1px;background:var(--bdr);display:block"></span>'
+      + '<span style="font-size:11px;color:var(--gl)">'+doneCount+'/'+rh.matches.length+' có KQ</span></div>'
+      + '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:10px;">'
+      + rh.matches.map(function(m){ return scoreCardHTML(m); }).join('')
+      + '</div></div>';
+  }).join('');
+}
+
+function scoreCardHTML(m) {
+  if (m.scored) {
+    var wT = m.score1>m.score2 ? m.team1 : m.team2;
+    var lT = m.score1>m.score2 ? m.team2 : m.team1;
+    return '<div class="score-card">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">'
+      +'<span style="font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:1px">'+(m.courtName||m.type)+' · Lượt '+m.round+'</span>'
+      +'<button class="btn btn-ghost btn-sm" onclick="editScore('+m.id+')" style="font-size:10px;padding:2px 8px;color:var(--acc);border-color:var(--acc);">✏️ Sửa</button>'
+      +'</div>'
+      +'<div style="display:flex;align-items:center;gap:8px;font-size:12px;">'
+      +'<span style="color:var(--win);font-weight:700">🏆 '+tNames(wT)+'</span>'
+      +'<span style="font-family:\'Bebas Neue\',sans-serif;font-size:18px;color:var(--win)">'+Math.max(m.score1,m.score2)+'</span>'
+      +'<span style="color:var(--mut)">–</span>'
+      +'<span style="font-family:\'Bebas Neue\',sans-serif;font-size:18px;color:var(--mut)">'+Math.min(m.score1,m.score2)+'</span>'
+      +'<span style="color:var(--mut)">'+tNames(lT)+'</span></div>'
+      +'<div style="font-size:11px;color:var(--gl);margin-top:6px">✅ ELO đã cập nhật</div>'
+      +'</div>';
+  }
+  return '<div class="score-card" id="sc-'+m.id+'">'
+    +'<div style="font-size:10px;color:var(--mut);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">'+(m.courtName||m.type)+' · Lượt '+m.round+'</div>'
+    +'<div style="display:flex;gap:7px;margin-bottom:10px;">'
+    +'<div style="flex:1;background:var(--bg);border-radius:8px;padding:7px 9px;">'
+    +'<div style="font-size:10px;color:var(--mut);margin-bottom:3px">ĐỘI 1</div>'
+    +'<div style="font-size:12px;font-weight:600">'+tNames(m.team1)+'</div>'
+    +'<div style="font-size:10px;color:var(--mut)">ELO '+Math.round(tElo(m.team1))+'</div></div>'
+    +'<div style="display:flex;align-items:center;font-family:\'Bebas Neue\',sans-serif;font-size:15px;color:var(--mut)">VS</div>'
+    +'<div style="flex:1;background:var(--bg);border-radius:8px;padding:7px 9px;text-align:right;">'
+    +'<div style="font-size:10px;color:var(--mut);margin-bottom:3px">ĐỘI 2</div>'
+    +'<div style="font-size:12px;font-weight:600">'+tNames(m.team2)+'</div>'
+    +'<div style="font-size:10px;color:var(--mut)">ELO '+Math.round(tElo(m.team2))+'</div></div></div>'
+    +'<div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:10px;">'
+    +'<div style="text-align:center">'
+    +'<div style="font-size:10px;color:var(--mut);margin-bottom:3px">'+tNames(m.team1)+'</div>'
+    +'<input class="score-in" id="s1-'+m.id+'" type="number" min="0" max="21" placeholder="11"></div>'
+    +'<span style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:var(--mut)">–</span>'
+    +'<div style="text-align:center">'
+    +'<input class="score-in" id="s2-'+m.id+'" type="number" min="0" max="21" placeholder="9">'
+    +'<div style="font-size:10px;color:var(--mut);margin-top:3px">'+tNames(m.team2)+'</div></div></div>'
+    +'<button class="btn btn-green btn-sm" style="width:100%;justify-content:center;" onclick="saveScore('+m.id+')">💾 Lưu & Cập nhật ELO</button>'
+    +'</div>';
+}
+
+// Reverse ELO for a scored match (used before re-scoring)
+function reverseElo(match) {
+  if (!match.scored) return;
+  var s1 = match.score1, s2 = match.score2;
+  var eA = tElo(match.team1), eB = tElo(match.team2);
+  var expA = 1 / (1 + Math.pow(10, (eB - eA) / 400));
+  var sA = s1 > s2 ? 1 : 0;
+  var scale = 1 + (Math.abs(s1 - s2) / 11) * 0.4;
+  var dA = Math.round(K * scale * (sA - expA));
+
+  match.team1.forEach(function(p) {
+    var pl = getP(p.id); if (!pl) return;
+    pl.elo = clamp(pl.elo - dA, 600, 2400);
+    pl.games = Math.max(0, pl.games - 1);
+    if (s1 > s2) pl.wins = Math.max(0, pl.wins - 1);
+    else pl.losses = Math.max(0, pl.losses - 1);
+    // Remove last form entry
+    var idx = s1>s2 ? pl.form.lastIndexOf('W') : pl.form.lastIndexOf('L');
+    if (idx >= 0) pl.form.splice(idx, 1);
+    pl.delta = 0;
+  });
+  match.team2.forEach(function(p) {
+    var pl = getP(p.id); if (!pl) return;
+    pl.elo = clamp(pl.elo + dA, 600, 2400);
+    pl.games = Math.max(0, pl.games - 1);
+    if (s2 > s1) pl.wins = Math.max(0, pl.wins - 1);
+    else pl.losses = Math.max(0, pl.losses - 1);
+    var idx = s2>s1 ? pl.form.lastIndexOf('W') : pl.form.lastIndexOf('L');
+    if (idx >= 0) pl.form.splice(idx, 1);
+    pl.delta = 0;
+  });
+
+  match.scored = false;
+  match.score1 = null;
+  match.score2 = null;
+  totalScored = Math.max(0, totalScored - 1);
+}
+
+function editScore(matchId) {
+  var match = null;
+  for (var i=0; i<history.length; i++) {
+    for (var j=0; j<history[i].matches.length; j++) {
+      if (history[i].matches[j].id === matchId) { match = history[i].matches[j]; break; }
+    }
+    if (match) break;
+  }
+  if (!match) return;
+  if (!confirm('Sửa điểm trận này? ELO sẽ được hoàn lại rồi tính lại sau khi nhập điểm mới.')) return;
+  reverseElo(match);
+  // Also update curMatches if match is in current round
+  var cm = curMatches.find(function(m){return m.id===matchId;});
+  if (cm) { cm.scored=false; cm.score1=null; cm.score2=null; }
+  renderScore(); renderBoard(); renderHistory(); renderCourts(); renderPlayers(); updateStats();
+  toast('✏️ Đã mở lại để sửa điểm — nhập điểm mới bên dưới');
+  save();
+}
+
+function saveScore(matchId) {
+  var match = null;
+  for (var i=0; i<history.length; i++) {
+    for (var j=0; j<history[i].matches.length; j++) {
+      if (history[i].matches[j].id === matchId) { match = history[i].matches[j]; break; }
+    }
+    if (match) break;
+  }
+  if (!match) return;
+  var el1 = document.getElementById('s1-'+matchId);
+  var el2 = document.getElementById('s2-'+matchId);
+  if (!el1||!el2) return;
+  var s1 = parseInt(el1.value), s2 = parseInt(el2.value);
+  if (isNaN(s1)||isNaN(s2)||s1<0||s2<0) { toast('⚠ Nhập tỉ số hợp lệ!'); return; }
+  if (s1===s2) { toast('⚠ Không thể hoà — phải có người thắng!'); return; }
+
+  applyElo(match, s1, s2);
+  var cm = curMatches.find(function(m){return m.id===matchId;});
+  if (cm) { cm.scored=true; cm.score1=s1; cm.score2=s2; }
+
+  renderScore(); renderBoard(); renderHistory(); renderCourts(); renderPlayers(); updateStats();
+  toast('🏆 ' + (s1>s2?tNames(match.team1):tNames(match.team2)) + ' thắng ' + Math.max(s1,s2) + '–' + Math.min(s1,s2) + ' · ELO cập nhật!');
+  save();
+}
+
+// ═══════════════════════════════
+//  RENDER LEADERBOARD
+// ═══════════════════════════════
+function renderBoard() {
+  var sorted = players.slice().sort(function(a,b){return b.elo-a.elo;});
+  var maxE = sorted[0]?sorted[0].elo:1400;
+  var minE = sorted[sorted.length-1]?sorted[sorted.length-1].elo:1000;
+  document.getElementById('lboard').innerHTML = sorted.map(function(p,i) {
+    var wr = p.games>0 ? Math.round(p.wins/p.games*100) : 0;
+    var rc = i===0?'g':i===1?'s':i===2?'b':'';
+    var pct = maxE===minE ? 50 : Math.round((p.elo-minE)/(maxE-minE)*100);
+    var d = p.delta;
+    var dStr = d>0 ? '<span style="color:var(--win)">▲'+d+'</span>'
+             : d<0 ? '<span style="color:var(--lose)">▼'+Math.abs(d)+'</span>'
+             : '<span style="color:var(--mut)">–</span>';
+    var form = p.form.length
+      ? p.form.map(function(f){return '<div class="fd fd'+f+'">'+f+'</div>';}).join('')
+      : '<div class="fd fdD">?</div>';
+    return '<div class="lrow">'
+      +'<div class="lrank '+rc+'">'+(i+1)+'</div>'
+      +'<div class="lav" style="background:'+RC[p.rank]+'22;color:'+RC[p.rank]+';border-color:'+RC[p.rank]+'">'+ini(p.name)+'</div>'
+      +'<div class="linfo">'
+      +'<div class="lname">'+p.name
+      +'<span style="font-size:10px;font-weight:700;color:'+RC[p.rank]+';background:'+RC[p.rank]+'18;padding:1px 6px;border-radius:3px">'+p.rank+'</span>'
+      +'<div class="frow">'+form+'</div></div>'
+      +'<div class="lsub">'+p.games+'t · '+p.wins+'T '+p.losses+'B · '+wr+'% WR</div></div>'
+      +'<div class="ebar"><div style="font-size:10px;color:var(--mut);text-align:right">ELO</div>'
+      +'<div class="ebg"><div class="efill" style="width:'+pct+'%;background:'+RC[p.rank]+'"></div></div></div>'
+      +'<div><div class="lelo" style="color:'+RC[p.rank]+'">'+Math.round(p.elo)+'</div>'
+      +'<div class="ldelta">'+dStr+'</div></div>'
+      +'</div>';
+  }).join('');
+}
+
+// ═══════════════════════════════
+//  RENDER HISTORY
+// ═══════════════════════════════
+function renderHistory() {
+  var list = document.getElementById('hlist');
+  if (!history.length) { list.innerHTML='<div style="color:var(--mut);font-size:13px;">Chưa có lượt nào.</div>'; return; }
+  list.innerHTML = history.slice().reverse().map(function(rh) {
+    var done = rh.matches.filter(function(m){return m.scored;}).length;
+    return '<div class="hi">'
+      +'<div class="hihead">'
+      +'<div class="hirnd">#'+rh.round+'</div>'
+      +'<div style="font-size:12px;color:var(--mut)">'+rh.matches.length+' sân · '+done+' có KQ</div></div>'
+      +'<div class="hmatches">'
+      +rh.matches.map(function(m){
+        var n1=tNames(m.team1), n2=tNames(m.team2);
+        var sc = m.scored
+          ? '<span style="font-family:\'Bebas Neue\',sans-serif;font-size:14px;color:var(--win)">'+Math.max(m.score1,m.score2)+'</span>'
+            +'<span style="color:var(--mut)">–</span>'
+            +'<span style="font-family:\'Bebas Neue\',sans-serif;font-size:14px;color:var(--mut)">'+Math.min(m.score1,m.score2)+'</span>'
+          : '<span style="color:var(--mut);font-size:10px">chờ KQ</span>';
+        var typeColor = m.type==='MIX'?'var(--acc)':'var(--'+m.type+')';
+        return '<div class="hm"><div class="hmtype" style="color:'+typeColor+'">'+m.type+'</div>'
+          +'<div>'+n1+' vs '+n2+'</div><div>'+sc+'</div></div>';
+      }).join('')
+      +'</div></div>';
+  }).join('');
+}
+
+// ═══════════════════════════════
+//  RENDER PLAYERS
+// ═══════════════════════════════
+function renderPlayers() {
+  document.getElementById('pgrid').innerHTML = players.map(function(p) {
+    var rbtns = ['A','B','C'].map(function(r) {
+      return '<button class="rb '+r+(p.rank===r?' on':'')+'" onclick="setRank('+p.id+',\''+r+'\',event)">'+r+'</button>';
+    }).join('');
+    return '<div class="pcard" data-rank="'+p.rank+'">'
+      +'<div class="pcard-top">'
+      +'<div class="av" style="background:'+RC[p.rank]+'22;color:'+RC[p.rank]+';border-color:'+RC[p.rank]+'">'+ini(p.name)+'</div>'
+      +'<div style="flex:1;min-width:0">'
+      +'<div class="pname">'+p.name+'</div>'
+      +'<div class="pelo" style="color:'+RC[p.rank]+'">'+Math.round(p.elo)+'</div>'
+      +'</div>'
+      +'<button class="btn-del" onclick="removePlayer('+p.id+',event)" title="Xoá">✕</button>'
+      +'</div>'
+      +'<div class="pstat">'+p.games+'t · '+p.wins+'T '+p.losses+'B</div>'
+      +'<div class="rbtns">'+rbtns+'</div>'
+      +'</div>';
+  }).join('');
+  updateCourtInfo();
+}
+
+// ═══════════════════════════════
+//  PLAYER ACTIONS
+// ═══════════════════════════════
+function setRank(id, rank, e) {
+  e.stopPropagation();
+  var p = getP(id); if (!p) return;
+  p.rank = rank;
+  if (p.games === 0) p.elo = BASE_ELO[rank];
+  renderPlayers();
+  toast(p.name + ' → Trình độ ' + rank);
+  save();
+}
+
+function removePlayer(id, e) {
+  e.stopPropagation();
+  var p = getP(id); if (!p) return;
+  var inMatch = curMatches.some(function(m) {
+    return m.team1.concat(m.team2).some(function(x){return x.id===id;});
+  });
+  if (inMatch) { toast('⚠ Người này đang trong lượt hiện tại!'); return; }
+  if (!confirm('Xoá "' + p.name + '" khỏi danh sách?')) return;
+  players = players.filter(function(x){return x.id!==id;});
+  curBench = curBench.filter(function(x){return x.id!==id;});
+  renderPlayers(); renderBoard(); renderBench(); updateStats();
+  toast('🗑 Đã xoá ' + p.name);
+  save();
+}
+
+function addPlayer() {
+  var name = document.getElementById('newName').value.trim();
+  if (!name) { toast('⚠ Nhập tên!'); return; }
+  var maxId = 0;
+  players.forEach(function(p){ if(p.id>maxId) maxId=p.id; });
+  players.push({id:maxId+1, name:name, rank:newRank, elo:BASE_ELO[newRank], games:0, wins:0, losses:0, form:[], delta:0});
+  document.getElementById('newName').value = '';
+  closeModal();
+  renderPlayers(); renderBoard(); updateStats();
+  toast('✅ Đã thêm ' + name + ' (' + newRank + ')');
+  save();
+}
+
+function resetAll() {
+  if (!confirm('Reset toàn bộ? Mất hết ELO và lịch sử.')) return;
+  localStorage.removeItem(SAVE_KEY);
+  curRound=0; curMatches=[]; curBench=[]; history=[]; totalScored=0; matchCtr=0; pairHistory={};
+  players = players.map(function(p){ return Object.assign({},p,{elo:BASE_ELO[p.rank],games:0,wins:0,losses:0,form:[],delta:0}); });
+  document.getElementById('roundLbl').textContent = '–';
+  renderCourts(); renderBench(); renderScore(); renderHistory(); renderBoard(); renderPlayers(); updateStats();
+  toast('↺ Đã reset toàn bộ!');
+}
+
+// ═══════════════════════════════
+//  STATS & TABS
+// ═══════════════════════════════
+function updateStats() {
+  document.getElementById('hP').textContent = players.length;
+  document.getElementById('hR').textContent = curRound;
+  document.getElementById('hM').textContent = totalScored;
+}
+
+function updateCourtInfo() {
+  var br = {A:0,B:0,C:0};
+  players.forEach(function(p){ br[p.rank]++; });
+  var need = numCourts * 4;
+  var bench = Math.max(0, players.length - need);
+  var el = document.getElementById('courtInfo');
+  if (el) el.textContent = players.length + ' người · ' + numCourts + ' sân · ' + bench + ' nghỉ mỗi lượt';
+}
+
+function tab(name) {
+  var names = ['play','score','board','history','players','guide'];
+  document.querySelectorAll('.tab').forEach(function(t,i){ t.classList.toggle('active', names[i]===name); });
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('page-'+name).classList.add('active');
+}
+
+// ═══════════════════════════════
+//  MODAL
+// ═══════════════════════════════
+function openAdd() { document.getElementById('addModal').classList.add('open'); }
+function closeModal() { document.getElementById('addModal').classList.remove('open'); }
+function pickRank(r) {
+  newRank = r;
+  ['A','B','C'].forEach(function(x){
+    var btn = document.getElementById('mr'+x);
+    btn.className = 'mrank' + (x===r ? ' on'+x : '');
+  });
+}
+document.getElementById('addModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+
+// ═══════════════════════════════
+//  TOAST
+// ═══════════════════════════════
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2600);
+}
+
+// ═══════════════════════════════
+//  PWA INSTALL
+// ═══════════════════════════════
+var deferredPrompt = null;
+var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+var isInstalled = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault(); deferredPrompt = e; showBanner('android');
+});
+function showBanner(type) {
+  if (isInstalled || localStorage.getItem('bannerDone')) return;
+  var b = document.getElementById('installBanner'); if(!b) return;
+  b.style.display = 'flex';
+  var sub = document.getElementById('ib-sub');
+  if (type==='ios') {
+    if(sub) sub.textContent = 'Safari → nút ⎙ Chia sẻ → Thêm vào Màn hình chính';
+    var ibtn = document.getElementById('ib-install'); if(ibtn) ibtn.style.display='none';
+  } else {
+    if(sub) sub.textContent = 'Lưu dữ liệu vĩnh viễn · Không cần internet';
+  }
+}
+function doInstall() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(){ deferredPrompt=null; dismissBanner(); });
+  }
+}
+function dismissBanner() {
+  var b = document.getElementById('installBanner'); if(b) b.style.display='none';
+  localStorage.setItem('bannerDone','1');
+}
+
+// ═══════════════════════════════
+//  EXPORT / IMPORT
+// ═══════════════════════════════
+function doExport() {
+  var raw = localStorage.getItem(SAVE_KEY) || '{}';
+  var box = document.getElementById('exportBox'); if(box) box.style.display='block';
+  var txt = document.getElementById('exportText'); if(txt) txt.value=raw;
+}
+function doCopy() {
+  var txt = document.getElementById('exportText'); if(!txt) return;
+  txt.select();
+  try { navigator.clipboard.writeText(txt.value); } catch(e) { document.execCommand('copy'); }
+  toast('✅ Đã copy! Dán vào máy khác để khôi phục.');
+}
+function doImport() {
+  var txt = document.getElementById('importText'); if(!txt) return;
+  var raw = txt.value.trim();
+  if (!raw) { toast('⚠ Dán dữ liệu vào trước!'); return; }
+  try {
+    JSON.parse(raw);
+    localStorage.setItem(SAVE_KEY, raw);
+    toast('✅ Xong! Đang tải lại...');
+    setTimeout(function(){ location.reload(); }, 1200);
+  } catch(e) { toast('⚠ Dữ liệu không hợp lệ!'); }
+}
+
+// ═══════════════════════════════
+//  INIT
+// ═══════════════════════════════
+var hadData = load();
+renderPlayers(); renderBoard(); renderHistory(); renderBench(); renderScore(); updateStats();
+if (curMatches.length) renderCourts();
+if (curRound > 0) document.getElementById('roundLbl').textContent = curRound;
+// Sync court number input
+setNumCourts(numCourts);
+if (!isInstalled && !localStorage.getItem('bannerDone') && isIOS) {
+  setTimeout(function(){ showBanner('ios'); }, 2500);
+}
+if (hadData) toast('✅ Đã khôi phục — Lượt ' + curRound + ', ' + players.length + ' người chơi');
+</script>
+</body>
+</html>
