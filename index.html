@@ -104,13 +104,18 @@ header{padding:24px 0 18px;display:flex;align-items:center;justify-content:space
 .sc-num{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;}
 .sc-dash{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--mut);line-height:1;}
 .vs{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--acc);}
-/* Chip: no avatar — name + ELO stacked, full width */
-.chip{display:flex;flex-direction:column;gap:1px;background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;padding:5px 8px;min-width:0;overflow:hidden;}
+/* Chip: full-width button, name + ELO stacked */
+.chip{display:flex;flex-direction:column;gap:1px;background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;padding:6px 9px;min-width:0;overflow:hidden;text-align:left;width:100%;color:var(--txt);}
+.chip.chip-tap{cursor:pointer;-webkit-tap-highlight-color:rgba(82,183,136,.15);transition:border-color .15s,background .15s;}
+.chip.chip-tap:active{background:rgba(82,183,136,.08);border-color:var(--gl);}
 .chav{display:none;}
 .chip-info{display:contents;}
-.chname{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4;}
-.chelo{font-size:10px;font-weight:700;line-height:1.3;}
+.chip-row{display:contents;}
+.chname{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4;color:var(--txt);}
+.chelo{font-size:10px;font-weight:600;line-height:1.3;opacity:.8;}
 .elo-lbl{font-size:9px;color:var(--mut);text-align:center;margin-top:2px;}
+/* Picker remove btn */
+.picker-remove{background:rgba(231,111,81,.07);border-color:rgba(231,111,81,.4);margin-bottom:6px;}
 .court-actions{margin-top:9px;display:flex;flex-direction:column;gap:6px;}
 .saved-bar{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:5px 8px;background:rgba(82,183,136,.1);border:1px solid var(--win);border-radius:7px;font-size:11px;}
 .court-note{width:100%;margin-top:7px;background:var(--bg);border:1px solid var(--bdr);border-radius:7px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:12px;padding:7px 9px;outline:none;resize:none;box-sizing:border-box;}
@@ -228,7 +233,7 @@ header{padding:24px 0 18px;display:flex;align-items:center;justify-content:space
 .picker-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--gl);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
 .picker-close{background:transparent;border:none;color:var(--mut);font-size:20px;cursor:pointer;padding:0 4px;}
 .picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:7px;}
-.picker-item{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:8px 10px;cursor:pointer;transition:all .2s;}
+.picker-item{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:8px 10px;cursor:pointer;transition:border-color .15s,background .15s;text-align:left;width:100%;-webkit-tap-highlight-color:rgba(82,183,136,.15);}
 .picker-item:hover,.picker-item:active{border-color:var(--gl);background:rgba(82,183,136,.08);}
 .picker-item .dav{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;}
 .picker-item-name{font-size:12px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -798,15 +803,13 @@ function findMatch(matchId) {
 
 function slotChipHTML(p, ci, si) {
   if (p) {
-    return '<div class="chip" style="cursor:pointer;" onclick="openPicker('+ci+','+si+')" title="Đổi người">'
-      +'<div class="chav" style="background:'+RC[p.rank]+'22;color:'+RC[p.rank]+'">'+ini(p.name)+'</div>'
-      +'<div class="chip-info">'
+    // button element = reliable touch on iOS; tap opens picker (which has "Xoá" option)
+    return '<button class="chip chip-tap" ontouchstart="" onclick="openPicker('+ci+','+si+')" type="button">'
       +'<div class="chname">'+escHTML(p.name)+'</div>'
-      +'<div class="chelo" style="color:'+RC[p.rank]+'">'+Math.round(p.elo)+'</div>'
-      +'</div>'
-      +'</div>';
+      +'<div class="chelo" style="color:'+RC[p.rank]+'">'+Math.round(p.elo)+' &nbsp;✎</div>'
+      +'</button>';
   }
-  return '<button class="slot-pick-btn" onclick="openPicker('+ci+','+si+')">'
+  return '<button class="slot-pick-btn" ontouchstart="" onclick="openPicker('+ci+','+si+')" type="button">'
     +'<span style="font-size:15px">+</span><span>Chọn người</span></button>';
 }
 
@@ -1271,7 +1274,8 @@ var pickerTarget = null;
 function openPicker(ci, si) {
   pickerTarget = {ci:ci, si:si};
   var teamLbls = ['Đội 1 · ①','Đội 1 · ②','Đội 2 · ①','Đội 2 · ②'];
-  document.getElementById('pickerTitle').textContent = teamLbls[si] + ' — ' + mgrCourts[ci].name;
+  var curPid = mgrCourts[ci].slots[si];
+  document.getElementById('pickerTitle').textContent = (curPid ? '✎ Đổi / Xoá — ' : '＋ Chọn — ') + teamLbls[si] + ' · ' + mgrCourts[ci].name;
 
   // Show all players not occupying another slot
   var usedIds = {};
@@ -1279,15 +1283,21 @@ function openPicker(ci, si) {
   var available = players.filter(function(p){ return !usedIds[p.id]; });
 
   var grid = document.getElementById('pickerGrid');
-  if (!available.length) {
+  // "Remove" option if slot already has a player
+  var currentPid = mgrCourts[ci].slots[si];
+  var removeBtn = currentPid !== null
+    ? '<button class="picker-item picker-remove" ontouchstart="" onclick="removeFromSlot('+ci+','+si+');closePicker();" type="button" style="grid-column:1/-1;border-color:var(--lose);color:var(--lose);">🗑 Xoá khỏi sân</button>'
+    : '';
+
+  if (!available.length && !currentPid) {
     grid.innerHTML = '<div style="color:var(--mut);font-size:13px;padding:8px;grid-column:1/-1;">Tất cả đã vào sân.</div>';
   } else {
-    grid.innerHTML = available.map(function(p) {
-      return '<div class="picker-item" onclick="pickPlayer('+p.id+')">'
-        +'<div class="dav" style="background:'+RC[p.rank]+'22;color:'+RC[p.rank]+';width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;">'+ini(p.name)+'</div>'
+    grid.innerHTML = removeBtn + available.map(function(p) {
+      return '<button class="picker-item" ontouchstart="" onclick="pickPlayer('+p.id+')" type="button">'
+        +'<div style="background:'+RC[p.rank]+'22;color:'+RC[p.rank]+';width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;">'+ini(p.name)+'</div>'
         +'<span class="picker-item-name">'+p.name+'</span>'
         +'<span class="picker-item-elo" style="color:'+RC[p.rank]+'">'+p.rank+' · '+Math.round(p.elo)+'</span>'
-        +'</div>';
+        +'</button>';
     }).join('');
   }
   document.getElementById('playerPicker').classList.add('open');
