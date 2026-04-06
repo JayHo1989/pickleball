@@ -6,9 +6,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Pickleball">
+<meta name="apple-mobile-web-app-title" content="OIO Social">
 <meta name="theme-color" content="#0a0f0d">
-<title>Pickleball Social</title>
+<title>OIO Social</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -80,7 +80,7 @@ header{padding:24px 0 18px;display:flex;align-items:center;justify-content:space
 .rb.C{color:var(--C);border-color:var(--C);}.rb.C.on{background:var(--C);color:#000;}
 
 /* COURTS */
-.cgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;margin-bottom:20px;}
+.cgrid{display:flex;flex-direction:column;gap:13px;margin-bottom:20px;}
 .cgrid-group{display:contents;}
 .court-group-lbl{grid-column:1/-1;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--mut);padding:4px 2px 0;border-top:1px solid var(--bdr);margin-top:4px;}
 .court-group-lbl:first-child{border-top:none;margin-top:0;}
@@ -94,15 +94,23 @@ header{padding:24px 0 18px;display:flex;align-items:center;justify-content:space
 .cbB{background:rgba(116,179,206,.18);color:var(--B);border:1px solid var(--B);}
 .cbC{background:rgba(168,218,220,.18);color:var(--C);border:1px solid var(--C);}
 .cbMIX{background:rgba(244,162,97,.12);color:var(--acc);border:1px solid var(--acc);}
-.cbody{padding:13px;}
-.mrow{display:flex;align-items:center;gap:8px;}
-.team{flex:1;display:flex;flex-direction:column;gap:5px;}
+.cbody{padding:11px;}
+/* 3-col court layout: Team1 | Score | Team2 */
+.court-layout{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;}
+.team{display:flex;flex-direction:column;gap:5px;}
+/* Score center: horizontal  11 – 9 */
+.score-center{display:flex;flex-direction:row;align-items:center;gap:5px;padding:0 4px;}
+.sc-num{font-family:'Bebas Neue',sans-serif;font-size:34px;line-height:1;}
+.sc-dash{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--mut);line-height:1;padding:0 2px;}
 .vs{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--acc);}
-.chip{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;padding:5px 8px;}
+.chip{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;padding:5px 7px;}
 .chav{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;flex-shrink:0;}
 .chname{font-size:11px;font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .chelo{font-size:10px;font-weight:700;margin-left:auto;}
-.saved-bar{display:flex;align-items:center;gap:7px;margin-top:9px;padding:6px 9px;background:rgba(82,183,136,.1);border:1px solid var(--win);border-radius:7px;font-size:12px;}
+.elo-lbl{font-size:9px;color:var(--mut);text-align:center;margin-top:2px;}
+.court-actions{margin-top:9px;display:flex;flex-direction:column;gap:6px;}
+.saved-bar{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:5px 8px;background:rgba(82,183,136,.1);border:1px solid var(--win);border-radius:7px;font-size:11px;}
+.court-note{width:100%;margin-top:7px;background:var(--bg);border:1px solid var(--bdr);border-radius:7px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:12px;padding:7px 9px;outline:none;resize:none;box-sizing:border-box;}
 
 /* SCORE */
 .score-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:13px;}
@@ -129,13 +137,11 @@ header{padding:24px 0 18px;display:flex;align-items:center;justify-content:space
 .efill{height:100%;border-radius:3px;transition:width .5s;}
 
 /* HISTORY */
-.hlist{display:flex;flex-direction:column;gap:7px;}
-.hi{background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:10px 13px;}
-.hihead{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
-.hirnd{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--mut);min-width:26px;}
-.hmatches{display:flex;flex-wrap:wrap;gap:6px;}
-.hm{background:var(--card);border-radius:6px;padding:5px 9px;font-size:11px;line-height:1.6;}
-.hmtype{font-weight:700;font-size:10px;}
+.hlist{display:flex;flex-direction:column;gap:12px;}
+.hi{background:var(--bg3);border:1px solid var(--bdr);border-radius:12px;padding:12px 14px;}
+.hihead{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--bdr);}
+.hirnd{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--acc);}
+.hmatch-card{background:var(--card);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;}
 
 /* BENCH */
 .bench{display:flex;flex-wrap:wrap;gap:7px;}
@@ -166,12 +172,10 @@ header{padding:24px 0 18px;display:flex;align-items:center;justify-content:space
 .leg{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--bdr);border-radius:6px;padding:5px 10px;font-size:12px;}
 .dot{width:8px;height:8px;border-radius:50%;}
 
-/* INLINE SCORE on court card */
-.inline-score{margin-top:10px;border-top:1px solid var(--bdr);padding-top:10px;}
-.inline-score .isrow{display:flex;align-items:center;gap:6px;justify-content:center;}
-.inline-score .islbl{font-size:10px;color:var(--mut);text-align:center;margin-bottom:3px;}
-.score-in-sm{width:46px;background:var(--bg);border:1px solid var(--bdr);border-radius:6px;padding:5px 6px;color:var(--txt);font-family:'Bebas Neue',sans-serif;font-size:22px;text-align:center;outline:none;}
-.score-in-sm:focus{border-color:var(--gl);}
+/* Score input — center column of court card */
+.score-in-sm{width:50px;background:var(--bg);border:1px solid var(--bdr);border-radius:7px;padding:6px 2px;color:var(--txt);font-family:'Bebas Neue',sans-serif;font-size:26px;text-align:center;outline:none;display:block;-moz-appearance:textfield;}
+.score-in-sm:focus{border-color:var(--gl);box-shadow:0 0 0 2px rgba(82,183,136,.15);}
+.score-in-sm::-webkit-inner-spin-button,.score-in-sm::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
 
 /* COURT MANAGEMENT MODAL */
 .mgt-modal{background:var(--bg2);border:1px solid var(--bdr);border-radius:16px;padding:18px;max-width:520px;width:96%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
@@ -227,7 +231,7 @@ header{padding:24px 0 18px;display:flex;align-items:center;justify-content:space
 .picker-item-name{font-size:12px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .picker-item-elo{font-size:10px;font-weight:700;}
 
-@media(max-width:560px){.hdr-stats{display:none;}.cgrid{grid-template-columns:1fr;}}
+@media(max-width:560px){.hdr-stats{display:none;}}
 </style>
 </head>
 <body>
@@ -248,7 +252,35 @@ header{padding:24px 0 18px;display:flex;align-items:center;justify-content:space
 <!-- HEADER -->
 <header>
   <div class="logo">
-    <h1>🏓 Pickleball Social</h1>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Paddle handle -->
+        <rect x="28" y="28" width="7" height="14" rx="3" transform="rotate(-45 28 28)" fill="#8B5E3C"/>
+        <rect x="29.5" y="29.5" width="4" height="12" rx="2" transform="rotate(-45 29.5 29.5)" fill="#A0724A"/>
+        <!-- Paddle head -->
+        <ellipse cx="18" cy="18" rx="13" ry="14" fill="#52b788"/>
+        <ellipse cx="18" cy="18" rx="11" ry="12" fill="#3a9d6e"/>
+        <!-- Paddle holes pattern -->
+        <circle cx="13" cy="13" r="1.5" fill="#2d6a4f"/>
+        <circle cx="18" cy="11" r="1.5" fill="#2d6a4f"/>
+        <circle cx="23" cy="13" r="1.5" fill="#2d6a4f"/>
+        <circle cx="11" cy="18" r="1.5" fill="#2d6a4f"/>
+        <circle cx="16" cy="18" r="1.5" fill="#2d6a4f"/>
+        <circle cx="21" cy="18" r="1.5" fill="#2d6a4f"/>
+        <circle cx="25" cy="18" r="1.5" fill="#2d6a4f"/>
+        <circle cx="13" cy="23" r="1.5" fill="#2d6a4f"/>
+        <circle cx="18" cy="24" r="1.5" fill="#2d6a4f"/>
+        <circle cx="23" cy="23" r="1.5" fill="#2d6a4f"/>
+        <!-- Ball -->
+        <circle cx="36" cy="8" r="6" fill="#f4a261"/>
+        <circle cx="36" cy="8" r="6" fill="none" stroke="#e76f51" stroke-width="0.8"/>
+        <!-- Ball holes -->
+        <circle cx="34" cy="7" r="1" fill="#e76f51"/>
+        <circle cx="37" cy="6" r="1" fill="#e76f51"/>
+        <circle cx="36" cy="10" r="1" fill="#e76f51"/>
+      </svg>
+      <h1 style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:var(--gl);line-height:1;">OIO Social</h1>
+    </div>
     <div class="sub">ELO Smart Matchmaking</div>
   </div>
   <div class="hdr-stats">
@@ -262,7 +294,6 @@ header{padding:24px 0 18px;display:flex;align-items:center;justify-content:space
 <!-- TABS -->
 <div class="tabs">
   <button class="tab active" onclick="tab('play')">🏟 Xếp Trận</button>
-  <button class="tab" onclick="tab('score')">📊 Nhập Điểm</button>
   <button class="tab" onclick="tab('board')">🏆 Bảng ELO</button>
   <button class="tab" onclick="tab('history')">📋 Lịch Sử</button>
   <button class="tab" onclick="tab('players')">👥 Người Chơi</button>
@@ -281,12 +312,11 @@ header{padding:24px 0 18px;display:flex;align-items:center;justify-content:space
   <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px;align-items:center;">
     <button class="btn btn-green" onclick="generateRound()">▶ Tạo lượt trận mới</button>
     <button class="btn btn-ghost" onclick="openAdd()">+ Thêm người</button>
-    <button class="btn btn-ghost" onclick="openCourtMgr()" style="color:var(--acc);border-color:var(--acc);">🏟 Quản lý sân</button>
     <button class="btn btn-ghost" onclick="resetAll()" style="color:var(--lose);border-color:var(--lose);">↺ Reset</button>
     <div style="display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:5px 10px;">
       <span style="font-size:11px;color:var(--mut);white-space:nowrap;">🏟 Số sân:</span>
       <button onclick="setNumCourts(numCourts-1)" style="width:26px;height:26px;border-radius:5px;border:1px solid var(--bdr);background:transparent;color:var(--txt);font-size:16px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;" title="Giảm">−</button>
-      <input id="numCourtsInput" type="number" min="1" max="10" value="3"
+      <input id="numCourtsInput" type="number" min="1" value="3"
         onchange="setNumCourts(parseInt(this.value)||1)"
         oninput="setNumCourts(parseInt(this.value)||1)"
         style="width:38px;background:var(--bg);border:1px solid var(--bdr);border-radius:6px;color:var(--txt);font-family:'Bebas Neue',sans-serif;font-size:20px;text-align:center;padding:2px 4px;outline:none;">
@@ -393,35 +423,6 @@ header{padding:24px 0 18px;display:flex;align-items:center;justify-content:space
 
 </div><!-- /wrap -->
 
-<!-- COURT MANAGER MODAL -->
-<div class="overlay" id="courtMgrModal">
-  <div class="mgt-modal">
-    <h3>🏟 Quản Lý Sân</h3>
-
-    <!-- Add new court -->
-    <div class="add-court-row">
-      <input class="add-court-inp" id="newCourtName" placeholder="Tên sân mới (VD: Sân VIP...)">
-      <button class="btn btn-acc btn-sm" onclick="addCourt()">+ Sân</button>
-    </div>
-
-    <!-- Pool of unassigned players -->
-    <div class="pool-lbl">👥 Chưa vào sân</div>
-    <div class="pool-area" id="mgr-pool"
-      ondragover="dragOver(event,'pool',-1)"
-      ondrop="dropOn(event,'pool',-1)"
-      ondragleave="dragLeave(event)">
-      <div id="pool-chips" style="display:flex;flex-wrap:wrap;gap:5px;min-height:26px;"></div>
-    </div>
-
-    <!-- Courts -->
-    <div id="mgr-courts" style="margin-bottom:12px;"></div>
-
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn btn-green" onclick="applyCourtMgr()">✅ Áp dụng</button>
-      <button class="btn btn-ghost" onclick="closeCourtMgr()">Đóng</button>
-    </div>
-  </div>
-</div>
 
 <!-- PLAYER PICKER BOTTOM SHEET -->
 <div id="playerPicker">
@@ -466,22 +467,22 @@ const SAVE_KEY = 'pkl_v4';
 const K = 32;
 
 let players = [
-  {id:1,  name:'Anh Tuấn',   rank:'A', elo:1400, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:2,  name:'Bảo Châu',   rank:'A', elo:1400, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:3,  name:'Cường Đức',  rank:'A', elo:1400, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:4,  name:'Duy Hùng',   rank:'A', elo:1400, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:5,  name:'Gia Huy',    rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:6,  name:'Hải Nam',    rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:7,  name:'Lan Phương', rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:8,  name:'Minh Quân',  rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:9,  name:'Ngọc Linh',  rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:10, name:'Phú Thịnh',  rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:11, name:'Quỳnh Anh',  rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:12, name:'Thanh Sơn',  rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:13, name:'Uyên Nhi',   rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:14, name:'Vân Khánh',  rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:15, name:'Xuân Mai',   rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
-  {id:16, name:'Yến Nhi',    rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:1,  name:'Anh Tuấn 01',   rank:'A', elo:1400, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:2,  name:'Bảo Châu 02',   rank:'A', elo:1400, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:3,  name:'Cường Đức 03',  rank:'A', elo:1400, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:4,  name:'Duy Hùng 04',   rank:'A', elo:1400, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:5,  name:'Gia Huy 05',    rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:6,  name:'Hải Nam 06',    rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:7,  name:'Lan Phương 07', rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:8,  name:'Minh Quân 08',  rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:9,  name:'Ngọc Linh 09',  rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:10, name:'Phú Thịnh 10',  rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:11, name:'Quỳnh Anh 11',  rank:'B', elo:1200, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:12, name:'Thanh Sơn 12',  rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:13, name:'Uyên Nhi 13',   rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:14, name:'Vân Khánh 14',  rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:15, name:'Xuân Mai 15',   rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
+  {id:16, name:'Yến Nhi 16',    rank:'C', elo:1000, games:0, wins:0, losses:0, form:[], delta:0},
 ];
 let curRound = 0;
 let curMatches = [];
@@ -505,7 +506,7 @@ function save() {
             id: m.id, round: m.round, type: m.type, courtName: m.courtName||'',
             t1: m.team1.map(function(p){return p.id;}),
             t2: m.team2.map(function(p){return p.id;}),
-            s1: m.score1, s2: m.score2, scored: m.scored
+            s1: m.score1, s2: m.score2, scored: m.scored, note: m.note||''
           };
         })
       };
@@ -544,7 +545,7 @@ function load() {
             id: m.id, round: m.round, type: m.type, courtName: m.courtName||'',
             team1: m.t1.map(function(id){return getP(id);}).filter(Boolean),
             team2: m.t2.map(function(id){return getP(id);}).filter(Boolean),
-            score1: m.s1, score2: m.s2, scored: m.scored
+            score1: m.s1, score2: m.s2, scored: m.scored, note: m.note||''
           };
         })
       };
@@ -626,11 +627,22 @@ function bestSplit(four) {
 }
 
 function setNumCourts(n) {
-  n = Math.max(1, Math.min(10, parseInt(n) || 1));
+  n = Math.max(1, parseInt(n) || 1);
   numCourts = n;
   var inp = document.getElementById('numCourtsInput');
   if (inp && parseInt(inp.value) !== n) inp.value = n;
   updateCourtInfo();
+  // Sync mgrCourts
+  while (mgrCourts.length < n) {
+    var nc = {id:'c'+(++mgrCourtCounter),name:'Sân '+(mgrCourts.length+1),slots:[null,null,null,null],matchId:null,type:'MIX',scored:false};
+    if (mgrPool.length >= 4) { var best=smartPickFour(mgrPool); if(best){best.forEach(function(pid){mgrPool=mgrPool.filter(function(x){return x!==pid;});}); nc.slots=best;} }
+    mgrCourts.push(nc);
+  }
+  while (mgrCourts.length > n) {
+    var rem = mgrCourts.pop();
+    rem.slots.forEach(function(pid){ if(pid&&mgrPool.indexOf(pid)<0) mgrPool.push(pid); });
+  }
+  renderCourts(); renderBench();
   save();
 }
 
@@ -709,6 +721,7 @@ function generateRound() {
 
   renderCourts(); renderBench(); renderScore(); renderHistory(); renderBoard(); renderPlayers(); updateStats();
   document.getElementById('roundLbl').textContent = curRound;
+  initCourtMgr();
 
   var benchNames = curBench.map(function(p){ return p.name.split(' ').pop(); }).join(', ');
   toast('✅ Lượt ' + curRound + ' — ' + matches.length + ' sân'
@@ -756,95 +769,201 @@ function chipHTML(p) {
     + '</div>';
 }
 
+function findMatch(matchId) {
+  for (var hi=0; hi<history.length; hi++)
+    for (var mi=0; mi<history[hi].matches.length; mi++)
+      if (history[hi].matches[mi].id === matchId) return history[hi].matches[mi];
+  return null;
+}
+
+function slotChipHTML(p, ci, si) {
+  if (p) {
+    return '<div class="chip" style="cursor:pointer;" onclick="openPicker('+ci+','+si+')" title="Đổi người">'
+      +'<div class="chav" style="background:'+RC[p.rank]+'22;color:'+RC[p.rank]+'">'+ini(p.name)+'</div>'
+      +'<div class="chname">'+p.name+'</div>'
+      +'<div class="chelo" style="color:'+RC[p.rank]+'">'+Math.round(p.elo)+'</div>'
+      +'</div>';
+  }
+  return '<button class="slot-pick-btn" onclick="openPicker('+ci+','+si+')">'
+    +'<span style="font-size:15px">+</span><span>Chọn người</span></button>';
+}
+
 function renderCourts() {
   var g = document.getElementById('cgrid');
-  if (!curMatches.length) {
+  if (!mgrCourts.length) {
     g.innerHTML = '<div style="color:var(--mut);font-size:14px;padding:20px;grid-column:1/-1;">Nhấn "Tạo lượt trận mới" để bắt đầu...</div>';
     return;
   }
 
-  // Group matches into pairs (2 courts playing simultaneously)
-  var html = '';
-  for (var gi = 0; gi < curMatches.length; gi += 2) {
-    var pair = curMatches.slice(gi, gi + 2);
-    var groupNum = Math.floor(gi / 2) + 1;
-    var allScored = pair.every(function(m){ return m.scored; });
-    var anyScored = pair.some(function(m){ return m.scored; });
-    var statusIcon = allScored ? '✅' : anyScored ? '🔄' : '▶';
-    var statusColor = allScored ? 'var(--win)' : anyScored ? 'var(--acc)' : 'var(--gl)';
+  var rl = document.getElementById('roundLbl');
+  if (rl) rl.textContent = curRound > 0 ? curRound : '–';
+  var allScored = mgrCourts.every(function(c){ var m=c.matchId!==null?findMatch(c.matchId):null; return m&&m.scored; });
+  var anyScored = mgrCourts.some(function(c){ var m=c.matchId!==null?findMatch(c.matchId):null; return m&&m.scored; });
+  var statusIcon = allScored?'✅':anyScored?'🔄':'▶';
+  var statusColor = allScored?'var(--win)':anyScored?'var(--acc)':'var(--gl)';
 
-    html += '<div class="court-group-lbl" style="color:'+statusColor+'">'
-      + statusIcon + ' HIỆP ' + groupNum
-      + (pair.length === 2 ? ' &nbsp;·&nbsp; 2 sân đồng thời' : '')
-      + '</div>';
+  var html = curRound>0
+    ? '<div class="court-group-lbl" style="color:'+statusColor+'">'
+      +statusIcon+' LƯỢT '+curRound
+      +(mgrCourts.length>1?' &nbsp;·&nbsp; '+mgrCourts.length+' sân đồng thời':'')
+      +'</div>'
+    : '';
 
-    pair.forEach(function(m, li) {
-      var i = gi + li;
-      var eA = Math.round(tElo(m.team1)), eB = Math.round(tElo(m.team2));
-      var courtLabel = m.courtName || ('SÂN ' + (i+1));
-      var savedHTML = m.scored
-        ? '<div class="saved-bar" style="justify-content:space-between;">'+
-          '<span>✅ <span style="color:var(--win);font-weight:700">'
-          + (m.score1>m.score2?tNames(m.team1):tNames(m.team2))
-          + ' thắng</span> <span style="color:var(--mut)">'
-          + Math.max(m.score1,m.score2)+'–'+Math.min(m.score1,m.score2)+'</span></span>'
-          + '<button class="btn btn-ghost btn-sm" onclick="editScore('+m.id+')" style="font-size:10px;padding:2px 8px;color:var(--acc);border-color:var(--acc);flex-shrink:0;">✏️ Sửa</button>'
-          + '</div>'
-        : '';
-      var inlineScore = m.scored ? '' :
-        '<div class="inline-score">'
-        + '<div style="font-size:10px;color:var(--mut);text-align:center;margin-bottom:6px;letter-spacing:1px">NHẬP ĐIỂM NHANH</div>'
-        + '<div class="isrow">'
-        + '<div style="text-align:center"><div class="islbl">'+tNames(m.team1)+'</div>'
-        + '<input class="score-in-sm" id="cs1-'+m.id+'" type="number" min="0" max="21" placeholder="11"></div>'
-        + '<span style="font-family:\'Bebas Neue\',sans-serif;font-size:18px;color:var(--mut);margin:0 4px">–</span>'
-        + '<div style="text-align:center"><input class="score-in-sm" id="cs2-'+m.id+'" type="number" min="0" max="21" placeholder="9">'
-        + '<div class="islbl">'+tNames(m.team2)+'</div></div>'
-        + '</div>'
-        + '<button class="btn btn-green btn-sm" style="width:100%;justify-content:center;margin-top:8px;" onclick="saveScoreInline('+m.id+')">💾 Lưu & ELO</button>'
-        + '</div>';
-      html += '<div class="court live" style="animation-delay:'+i*.07+'s">'
-        + '<div class="chdr">'
-        + '<div class="cname">'+courtLabel+'</div>'
-        + '<div style="display:flex;gap:6px;align-items:center;">'
-        + '<span style="font-size:10px;color:var(--mut)">'+balanceLbl(m.team1,m.team2)+'</span>'
-        + '<div class="cbadge cb'+m.type+'">'+m.type+'</div>'
-        + '</div></div>'
-        + '<div class="cbody">'
-        + '<div class="mrow">'
-        + '<div class="team">'+chipHTML(m.team1[0])+chipHTML(m.team1[1])
-        + '<div style="font-size:10px;color:var(--mut);text-align:center;margin-top:2px">ELO '+eA+'</div></div>'
-        + '<div class="vs">VS</div>'
-        + '<div class="team">'+chipHTML(m.team2[0])+chipHTML(m.team2[1])
-        + '<div style="font-size:10px;color:var(--mut);text-align:center;margin-top:2px">ELO '+eB+'</div></div>'
-        + '</div>'+savedHTML+inlineScore+'</div></div>';
-    });
+  for (var ci=0; ci<mgrCourts.length; ci++) {
+    var court = mgrCourts[ci];
+    var match = court.matchId!==null ? findMatch(court.matchId) : null;
+    var s = court.slots;
+    var p0=getP(s[0]),p1=getP(s[1]),p2=getP(s[2]),p3=getP(s[3]);
+    var allFilled = !!(p0&&p1&&p2&&p3);
+    var eA=(p0&&p1)?Math.round((p0.elo+p1.elo)/2):null;
+    var eB=(p2&&p3)?Math.round((p2.elo+p3.elo)/2):null;
+    var filled=s.filter(function(x){return x!==null;}).length;
+
+    var typeLabel='MIX';
+    if (allFilled) {
+      var rr=[p0.rank,p1.rank,p2.rank,p3.rank],ur=rr.filter(function(r,i){return rr.indexOf(r)===i;});
+      typeLabel=ur.length===1?ur[0]:'MIX';
+    }
+
+    var headerRight = allFilled
+      ? '<span style="font-size:10px;color:var(--mut)">'+balanceLbl([p0,p1],[p2,p3])+'</span><div class="cbadge cb'+typeLabel+'">'+typeLabel+'</div>'
+      : '<span style="font-size:11px;color:var(--acc);font-weight:700">'+filled+'/4</span>';
+
+    // ── Score center column ──
+    var scoreCenterHTML = '';
+    var actionsHTML = '';
+
+    if (match && match.scored) {
+      var w1 = match.score1 > match.score2;
+      scoreCenterHTML = '<div class="score-center">'
+        +'<span class="sc-num" style="color:'+(w1?'var(--win)':'var(--mut)')+'">'+match.score1+'</span>'
+        +'<span class="sc-dash">–</span>'
+        +'<span class="sc-num" style="color:'+(!w1?'var(--win)':'var(--mut)')+'">'+match.score2+'</span>'
+        +'</div>';
+      var winnerName = w1 ? tNames(match.team1) : tNames(match.team2);
+      actionsHTML = '<div class="court-actions">'
+        +'<div class="saved-bar">'
+        +'<span>✅ <b style="color:var(--win)">'+winnerName+'</b> thắng</span>'
+        +'<div style="display:flex;gap:5px;">'
+        +'<button class="btn btn-ghost btn-sm" onclick="editScore('+match.id+')" style="font-size:10px;padding:2px 8px;color:var(--acc);border-color:var(--acc);">✏️ Sửa</button>'
+        +'<button class="btn btn-green btn-sm" onclick="newMatchAtCourt('+ci+')" style="font-size:10px;padding:2px 8px;">▶ Trận mới</button>'
+        +'</div></div>'
+        +'<textarea id="note-inp-'+ci+'" rows="2" class="court-note" placeholder="📝 Ghi chú trận (chấp điểm, tỉ lệ...)" onblur="autoSaveNote('+ci+',this.value)">'+escHTML(court.note||'')+'</textarea>'
+        +'</div>';
+    } else if (allFilled) {
+      scoreCenterHTML = '<div class="score-center">'
+        +'<input class="score-in-sm" id="cs1-'+ci+'" type="number" min="0" max="21" placeholder="11">'
+        +'<span class="sc-dash">–</span>'
+        +'<input class="score-in-sm" id="cs2-'+ci+'" type="number" min="0" max="21" placeholder="9">'
+        +'</div>';
+      actionsHTML = '<div class="court-actions">'
+        +'<button class="btn btn-green btn-sm" style="width:100%;justify-content:center;" onclick="saveScoreFromCourt('+ci+')">💾 Lưu & ELO</button>'
+        +'<textarea id="note-inp-'+ci+'" rows="2" class="court-note" placeholder="📝 Ghi chú trận (chấp điểm, tỉ lệ...)" onblur="autoSaveNote('+ci+',this.value)">'+escHTML(court.note||'')+'</textarea>'
+        +'</div>';
+    } else {
+      scoreCenterHTML = '<div class="score-center"><span class="vs">VS</span></div>';
+    }
+
+    html+='<div class="court'+(match&&match.scored?' scored':match?' live':'')+'" style="animation-delay:'+ci*.07+'s">'
+      +'<div class="chdr"><div class="cname">'+escHTML(court.name)+'</div>'
+      +'<div style="display:flex;gap:6px;align-items:center;">'+headerRight+'</div></div>'
+      +'<div class="cbody">'
+      +'<div class="court-layout">'
+      // Team 1
+      +'<div class="team">'
+      +slotChipHTML(p0,ci,0)
+      +slotChipHTML(p1,ci,1)
+      +(eA!==null?'<div class="elo-lbl">ELO '+eA+'</div>':'')
+      +'</div>'
+      // Score center
+      +scoreCenterHTML
+      // Team 2
+      +'<div class="team">'
+      +slotChipHTML(p2,ci,2)
+      +slotChipHTML(p3,ci,3)
+      +(eB!==null?'<div class="elo-lbl">ELO '+eB+'</div>':'')
+      +'</div>'
+      +'</div>'
+      +actionsHTML
+      +'</div></div>';
   }
   g.innerHTML = html;
 }
 
-// Inline score save from court card
-function saveScoreInline(matchId) {
-  var match = null;
-  for (var i=0; i<history.length; i++) {
-    for (var j=0; j<history[i].matches.length; j++) {
-      if (history[i].matches[j].id === matchId) { match = history[i].matches[j]; break; }
-    }
-    if (match) break;
+// Save score directly from court card (ci = court index in mgrCourts)
+function saveScoreFromCourt(ci) {
+  var court = mgrCourts[ci];
+  var s = court.slots;
+  var p0=getP(s[0]),p1=getP(s[1]),p2=getP(s[2]),p3=getP(s[3]);
+  if (!p0||!p1||!p2||!p3) { toast('⚠ Sân chưa đủ 4 người!'); return; }
+  var v1=parseInt(document.getElementById('cs1-'+ci).value);
+  var v2=parseInt(document.getElementById('cs2-'+ci).value);
+  if (isNaN(v1)||isNaN(v2)||v1<0||v2<0) { toast('⚠ Nhập tỉ số hợp lệ!'); return; }
+  if (v1===v2) { toast('⚠ Không thể hoà — phải có người thắng!'); return; }
+
+  var match = court.matchId!==null ? findMatch(court.matchId) : null;
+  if (!match || match.scored) {
+    // Create new match on the fly
+    var rr=[p0.rank,p1.rank,p2.rank,p3.rank],ur=rr.filter(function(r,i){return rr.indexOf(r)===i;});
+    var type=ur.length===1?ur[0]:'MIX';
+    if (curRound===0) curRound=1;
+    match={id:matchCtr++,round:curRound,type:type,courtName:court.name,
+           team1:[p0,p1],team2:[p2,p3],score1:null,score2:null,scored:false};
+    curMatches.push(match);
+    if (history.length && history[history.length-1].round===curRound)
+      history[history.length-1].matches.push(match);
+    else history.push({round:curRound,matches:[match]});
+    court.matchId=match.id;
+    incPair(p0.id,p1.id); incPair(p2.id,p3.id);
+    document.getElementById('roundLbl').textContent=curRound;
   }
-  if (!match) return;
-  var el1 = document.getElementById('cs1-'+matchId);
-  var el2 = document.getElementById('cs2-'+matchId);
-  if (!el1||!el2) return;
-  var s1 = parseInt(el1.value), s2 = parseInt(el2.value);
-  if (isNaN(s1)||isNaN(s2)||s1<0||s2<0) { toast('⚠ Nhập tỉ số hợp lệ!'); return; }
-  if (s1===s2) { toast('⚠ Không thể hoà — phải có người thắng!'); return; }
-  applyElo(match, s1, s2);
-  var cm = curMatches.find(function(m){return m.id===matchId;});
-  if (cm) { cm.scored=true; cm.score1=s1; cm.score2=s2; }
-  renderScore(); renderBoard(); renderHistory(); renderCourts(); renderPlayers(); updateStats();
-  toast('🏆 ' + (s1>s2?tNames(match.team1):tNames(match.team2)) + ' thắng ' + Math.max(s1,s2) + '–' + Math.min(s1,s2) + ' · ELO cập nhật!');
+  // Capture note from textarea before re-render clears it
+  var noteEl = document.getElementById('note-inp-'+ci);
+  if (noteEl && noteEl.value.trim()) court.note = noteEl.value.trim();
+  applyElo(match,v1,v2);
+  var cm=curMatches.find(function(m){return m.id===match.id;});
+  if (cm){cm.scored=true;cm.score1=v1;cm.score2=v2;cm.note=court.note||'';}
+  match.note = court.note||'';
+  court.scored=true;
+  renderCourts(); renderBench(); renderScore(); renderHistory(); renderBoard(); renderPlayers(); updateStats();
+  toast('🏆 '+(v1>v2?tNames(match.team1):tNames(match.team2))+' thắng '+Math.max(v1,v2)+'–'+Math.min(v1,v2)+' · ELO cập nhật!');
   save();
+}
+
+function autoSaveNote(ci, value) {
+  if (!mgrCourts[ci]) return;
+  var text = value.trim();
+  mgrCourts[ci].note = text;
+  var court = mgrCourts[ci];
+  if (court.matchId !== null) {
+    var m = findMatch(court.matchId);
+    if (m) m.note = text;
+  }
+  save();
+}
+
+function newMatchAtCourt(ci) {
+  var court = mgrCourts[ci];
+  // Merge current bench into pool first (they were waiting)
+  curBench.forEach(function(p){ if(p && mgrPool.indexOf(p.id)<0) mgrPool.push(p.id); });
+  // Return this court's players to pool
+  court.slots.forEach(function(pid){ if(pid && mgrPool.indexOf(pid)<0) mgrPool.push(pid); });
+  // Reset court
+  court.slots = [null,null,null,null];
+  court.matchId = null;
+  court.scored = false;
+  court.note = '';
+  // Auto-fill from pool if enough players available
+  if (mgrPool.length >= 4) {
+    var best = smartPickFour(mgrPool);
+    if (best) {
+      best.forEach(function(pid){ mgrPool = mgrPool.filter(function(x){return x!==pid;}); });
+      court.slots = best;
+    }
+  }
+  curBench = mgrPool.map(function(pid){return getP(pid);}).filter(Boolean);
+  renderCourts(); renderBench();
+  toast('🏟 '+court.name+' — sẵn sàng trận mới!');
 }
 
 // ═══════════════════════════════
@@ -858,7 +977,7 @@ var mgrCourtCounter = 0;
 // pairHistory[idA][idB] = number of times A & B were on same team
 var pairHistory = {};
 
-function openCourtMgr() {
+function initCourtMgr() {
   // Build from curMatches if exists, else empty
   mgrCourts = [];
   mgrPool = [];
@@ -870,16 +989,16 @@ function openCourtMgr() {
       var courtId = 'c' + (++mgrCourtCounter);
       var slots = [m.team1[0].id, m.team1[1].id, m.team2[0].id, m.team2[1].id];
       slots.forEach(function(id){ usedIds[id]=true; });
-      mgrCourts.push({id:courtId, name:m.courtName||('Sân '+(i+1)), slots:slots, matchId:m.id, type:m.type, scored:m.scored});
+      mgrCourts.push({id:courtId, name:m.courtName||('Sân '+(i+1)), slots:slots, matchId:m.id, type:m.type, scored:m.scored, note:m.note||''});
     });
-    // Add bench to pool
-    curBench.forEach(function(p){ if(!usedIds[p.id]){ mgrPool.push(p.id); usedIds[p.id]=true; } });
+    // Add ALL players not on a court to pool (robust: no dependency on curBench state)
+    players.forEach(function(p){ if(!usedIds[p.id]){ mgrPool.push(p.id); usedIds[p.id]=true; } });
   } else {
     // No matches yet — all players in pool
     players.forEach(function(p){ mgrPool.push(p.id); });
-    // Default 2 courts (always 2 play simultaneously)
-    var numCourts = Math.max(2, Math.floor(players.length / 4));
-    for (var i=0; i<numCourts; i++) {
+    // Default courts based on numCourts setting
+    var n = Math.max(1, Math.min(numCourts, Math.floor(players.length / 4)));
+    for (var i=0; i<n; i++) {
       mgrCourts.push({id:'c'+(++mgrCourtCounter), name:'Sân '+(i+1), slots:[null,null,null,null], matchId:null, type:'MIX', scored:false});
     }
     // Auto-fill courts with smart pairing
@@ -894,13 +1013,13 @@ function openCourtMgr() {
     });
   }
 
-  renderMgr();
-  document.getElementById('courtMgrModal').classList.add('open');
+  curBench = mgrPool.map(function(pid){return getP(pid);}).filter(Boolean);
+  renderCourts();
+  renderBench();
 }
 
-function closeCourtMgr() {
-  document.getElementById('courtMgrModal').classList.remove('open');
-}
+function openCourtMgr() { initCourtMgr(); }
+function closeCourtMgr() {}
 
 function addCourt() {
   var inp = document.getElementById('newCourtName');
@@ -1131,17 +1250,22 @@ function openPicker(ci, si) {
   pickerTarget = {ci:ci, si:si};
   var teamLbls = ['Đội 1 · ①','Đội 1 · ②','Đội 2 · ①','Đội 2 · ②'];
   document.getElementById('pickerTitle').textContent = teamLbls[si] + ' — ' + mgrCourts[ci].name;
+
+  // Show all players not occupying another slot
+  var usedIds = {};
+  mgrCourts.forEach(function(c,idx){ c.slots.forEach(function(pid,sidx){ if(pid!==null&&!(idx===ci&&sidx===si)) usedIds[pid]=true; }); });
+  var available = players.filter(function(p){ return !usedIds[p.id]; });
+
   var grid = document.getElementById('pickerGrid');
-  if (!mgrPool.length) {
-    grid.innerHTML = '<div style="color:var(--mut);font-size:13px;padding:8px;grid-column:1/-1;">Không còn người chưa vào sân.</div>';
+  if (!available.length) {
+    grid.innerHTML = '<div style="color:var(--mut);font-size:13px;padding:8px;grid-column:1/-1;">Tất cả đã vào sân.</div>';
   } else {
-    grid.innerHTML = mgrPool.map(function(pid) {
-      var p = getP(pid); if(!p) return '';
-      return '<div class="picker-item" onclick="pickPlayer('+pid+')">'
-        + '<div class="dav" style="background:'+RC[p.rank]+'22;color:'+RC[p.rank]+';width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;">'+ini(p.name)+'</div>'
-        + '<span class="picker-item-name">'+p.name+'</span>'
-        + '<span style="font-size:10px;font-weight:700;color:'+RC[p.rank]+'">'+p.rank+'</span>'
-        + '</div>';
+    grid.innerHTML = available.map(function(p) {
+      return '<div class="picker-item" onclick="pickPlayer('+p.id+')">'
+        +'<div class="dav" style="background:'+RC[p.rank]+'22;color:'+RC[p.rank]+';width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;">'+ini(p.name)+'</div>'
+        +'<span class="picker-item-name">'+p.name+'</span>'
+        +'<span class="picker-item-elo" style="color:'+RC[p.rank]+'">'+p.rank+' · '+Math.round(p.elo)+'</span>'
+        +'</div>';
     }).join('');
   }
   document.getElementById('playerPicker').classList.add('open');
@@ -1155,12 +1279,14 @@ function closePicker() {
 function pickPlayer(pid) {
   if (!pickerTarget) return;
   var ci = pickerTarget.ci, si = pickerTarget.si;
-  mgrPool = mgrPool.filter(function(id){ return id !== pid; });
   var old = mgrCourts[ci].slots[si];
   if (old !== null && old !== pid && mgrPool.indexOf(old) < 0) mgrPool.push(old);
+  mgrPool = mgrPool.filter(function(id){ return id !== pid; });
   mgrCourts[ci].slots[si] = pid;
+  curBench = mgrPool.map(function(pid2){return getP(pid2);}).filter(Boolean);
   closePicker();
-  renderMgr();
+  renderCourts();
+  renderBench();
 }
 
 document.getElementById('playerPicker').addEventListener('click', function(e) {
@@ -1172,7 +1298,9 @@ function removeFromSlot(ci, si) {
   if (pid !== null) {
     mgrCourts[ci].slots[si] = null;
     if (mgrPool.indexOf(pid) < 0) mgrPool.push(pid);
-    renderMgr();
+    curBench = mgrPool.map(function(pid2){return getP(pid2);}).filter(Boolean);
+    renderCourts();
+    renderBench();
   }
 }
 
@@ -1314,10 +1442,8 @@ function applyCourtMgr() {
   renderCourts(); renderBench(); renderScore(); renderHistory(); renderBoard(); renderPlayers(); updateStats();
   toast('✅ Đã áp dụng '+newMatches.length+' sân!');
   save();
-  closeCourtMgr();
 }
 
-document.getElementById('courtMgrModal').addEventListener('click', function(e){ if(e.target===this) closeCourtMgr(); });
 
 // ═══════════════════════════════
 //  RENDER BENCH
@@ -1517,25 +1643,82 @@ function renderBoard() {
 function renderHistory() {
   var list = document.getElementById('hlist');
   if (!history.length) { list.innerHTML='<div style="color:var(--mut);font-size:13px;">Chưa có lượt nào.</div>'; return; }
+
+  // Sequential match numbering across all rounds
+  var matchCounter = 0;
+  var matchNumMap = {};
+  history.forEach(function(rh) {
+    rh.matches.forEach(function(m) { matchNumMap[m.id] = ++matchCounter; });
+  });
+
+  // Same chip as court cards (read-only, no onclick)
+  function histChip(p) {
+    if (!p) return '<div class="chip"><span class="chname" style="color:var(--mut)">?</span></div>';
+    return '<div class="chip">'
+      +'<div class="chav" style="background:'+RC[p.rank]+'22;color:'+RC[p.rank]+'">'+ini(p.name)+'</div>'
+      +'<span class="chname">'+escHTML(p.name)+'</span>'
+      +'<span class="chelo" style="color:'+RC[p.rank]+'">'+Math.round(p.elo)+'</span>'
+      +'</div>';
+  }
+
   list.innerHTML = history.slice().reverse().map(function(rh) {
     var done = rh.matches.filter(function(m){return m.scored;}).length;
+
+    var cardsHtml = rh.matches.map(function(m) {
+      var num = matchNumMap[m.id] || '?';
+      var typeColor = m.type==='MIX' ? 'var(--acc)' : (RC[m.type]||'var(--acc)');
+      var typeBg   = m.type==='MIX' ? 'rgba(244,162,97,.12)' : (RC[m.type]+'22');
+
+      // ELO averages
+      var eA = m.team1.length===2 ? Math.round((m.team1[0].elo+m.team1[1].elo)/2) : null;
+      var eB = m.team2.length===2 ? Math.round((m.team2[0].elo+m.team2[1].elo)/2) : null;
+
+      // Score center — same style as court cards
+      var w1 = m.scored && m.score1 > m.score2;
+      var w2 = m.scored && m.score2 > m.score1;
+      var scoreCenter = m.scored
+        ? '<div class="score-center">'
+          +'<span class="sc-num" style="color:'+(w1?'var(--win)':'var(--mut)')+'">'+m.score1+'</span>'
+          +'<span class="sc-dash">–</span>'
+          +'<span class="sc-num" style="color:'+(w2?'var(--win)':'var(--mut)')+'">'+m.score2+'</span>'
+          +'</div>'
+        : '<div class="score-center"><span class="vs">VS</span></div>';
+
+      return '<div class="hmatch-card">'
+        // Header — same style as court card header
+        +'<div class="chdr" style="border-radius:10px 10px 0 0;">'
+        +'<div style="display:flex;align-items:center;gap:7px;">'
+        +'<span class="cname">Trận '+num+'</span>'
+        +'<span class="cbadge cb'+m.type+'">'+m.type+'</span>'
+        +(m.courtName?'<span style="font-size:10px;color:var(--mut);">'+escHTML(m.courtName)+'</span>':'')
+        +'</div>'
+        +(m.scored?'<span style="font-size:10px;color:var(--win);font-weight:700;">✅ Đã có KQ</span>':'<span style="font-size:10px;color:var(--mut);">Chờ KQ</span>')
+        +'</div>'
+        // 3-col body: Team1 | Score | Team2
+        +'<div style="padding:11px;" class="cbody-hist">'
+        +'<div class="court-layout">'
+        +'<div class="team">'
+        +histChip(m.team1[0])+histChip(m.team1[1])
+        +(eA!==null?'<div class="elo-lbl">ELO '+eA+'</div>':'')
+        +'</div>'
+        +scoreCenter
+        +'<div class="team">'
+        +histChip(m.team2[0])+histChip(m.team2[1])
+        +(eB!==null?'<div class="elo-lbl">ELO '+eB+'</div>':'')
+        +'</div>'
+        +'</div>'
+        +(m.note?'<div style="margin-top:8px;padding-top:7px;border-top:1px solid var(--bdr);font-size:11px;color:var(--acc);">📝 '+escHTML(m.note)+'</div>':'')
+        +'</div>'
+        +'</div>';
+    }).join('');
+
     return '<div class="hi">'
       +'<div class="hihead">'
-      +'<div class="hirnd">#'+rh.round+'</div>'
-      +'<div style="font-size:12px;color:var(--mut)">'+rh.matches.length+' sân · '+done+' có KQ</div></div>'
-      +'<div class="hmatches">'
-      +rh.matches.map(function(m){
-        var n1=tNames(m.team1), n2=tNames(m.team2);
-        var sc = m.scored
-          ? '<span style="font-family:\'Bebas Neue\',sans-serif;font-size:14px;color:var(--win)">'+Math.max(m.score1,m.score2)+'</span>'
-            +'<span style="color:var(--mut)">–</span>'
-            +'<span style="font-family:\'Bebas Neue\',sans-serif;font-size:14px;color:var(--mut)">'+Math.min(m.score1,m.score2)+'</span>'
-          : '<span style="color:var(--mut);font-size:10px">chờ KQ</span>';
-        var typeColor = m.type==='MIX'?'var(--acc)':'var(--'+m.type+')';
-        return '<div class="hm"><div class="hmtype" style="color:'+typeColor+'">'+m.type+'</div>'
-          +'<div>'+n1+' vs '+n2+'</div><div>'+sc+'</div></div>';
-      }).join('')
-      +'</div></div>';
+      +'<div class="hirnd">Lượt #'+rh.round+'</div>'
+      +'<div style="font-size:12px;color:var(--mut);">'+rh.matches.length+' trận · '+done+' có KQ</div>'
+      +'</div>'
+      +'<div style="display:flex;flex-direction:column;gap:10px;">'+cardsHtml+'</div>'
+      +'</div>';
   }).join('');
 }
 
@@ -1728,6 +1911,7 @@ var hadData = load();
 renderPlayers(); renderBoard(); renderHistory(); renderBench(); renderScore(); updateStats();
 if (curMatches.length) renderCourts();
 if (curRound > 0) document.getElementById('roundLbl').textContent = curRound;
+initCourtMgr();
 // Sync court number input
 setNumCourts(numCourts);
 if (!isInstalled && !localStorage.getItem('bannerDone') && isIOS) {
